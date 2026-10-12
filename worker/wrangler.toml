@@ -1,0 +1,9 @@
+name = "noxis-rank"
+main = "index.js"
+compatibility_date = "2024-11-01"
+
+# Reemplazar <KV_ID> por el id del namespace KV creado en el dashboard
+# (Workers & Pages -> KV -> Create namespace -> copiar el ID).
+[[kv_namespaces]]
+binding = "NOXIS_EVENTS"
+id = "<KV_ID>"

@@ -382,6 +382,11 @@
     return parseInt(raw, 10) || 60;
   }
 
+  /* Re-aplica filtros/orden cuando llega la popularidad dinámica. */
+  document.addEventListener("noxis:popularity", () => {
+    if (Explore.grid) Explore.apply();
+  });
+
   /* Encadena el hook del router: mantiene el de Home y agrega Explorar. */
   const existingHook = global.NOXIS.RouterHooks;
   global.NOXIS.RouterHooks = function (route, state) {

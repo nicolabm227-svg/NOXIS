@@ -241,6 +241,13 @@
     },
   };
 
+  /* Re-renderiza las secciones cuando llega la popularidad dinámica
+     del backend (mantiene también el estado de búsqueda activo). */
+  document.addEventListener("noxis:popularity", () => {
+    if (!Home.searchInput) return;
+    Home.applySearch(Home.searchInput.value.trim());
+  });
+
   /* Hook del router: se invoca en cada cambio de vista. */
   global.NOXIS.RouterHooks = function (route, state) {
     if (route === "home") {

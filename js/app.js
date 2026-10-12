@@ -27,6 +27,10 @@
       this.bindEvents();
       this.hideLoader();
       this.showRoute("home");
+      // Carga asíncrona de la popularidad dinámica (no bloquea el render).
+      if (global.NOXIS.Data && typeof global.NOXIS.Data.init === "function") {
+        global.NOXIS.Data.init();
+      }
     },
 
     cacheDom() {

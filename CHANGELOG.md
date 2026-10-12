@@ -12,10 +12,14 @@ Registro del estado conocido y la evolución del proyecto. No se dispone de fech
 - **Explorar**: filtros (categoría, género, sistema operativo, año), ordenamiento (recientes/populares/A-Z), paginación (12 por página), contador, "Limpiar filtros".
 - **Herramientas**: enlaces externos (WinRAR, UltraISO, DAEMON Tools, qBittorrent, µTorrent) en pestaña nueva con `rel="noopener noreferrer"`.
 - **Ventana del juego (overlay)**: marco tipo ventana de escritorio, tres puntos de control, portada 2:3, información, pestañas (Información/Requisitos/Galería), botones Descargar y Comprar (visuales).
-- **Datos**: `NOXIS.Data` con 30 juegos y 5 herramientas.
+- **Datos**: `NOXIS.Data` con 5 juegos y 5 herramientas.
 
 ### Cambios recientes
 
+- **Ranking por interacciones (backend)**: nuevo `worker/index.js` (Cloudflare Worker + KV) con endpoints `POST /event` y `GET /popular`. Score ponderado `open=1, download=5, purchase=2` con decaimiento exponencial de 30 días y dedupe por sesión.
+- **`NOXIS.Analytics`**: nuevo módulo `js/analytics.js` que envía eventos anónimos (apertura de ficha, Descargar, Comprar) vía `sendBeacon`; inactivo en localhost/file.
+- **Popularidad dinámica**: `NOXIS.Data.init()` consulta `/popular` y reordena la sección "Más populares" y el orden "populares" de Explorar según interacciones reales. Sin backend o sin conexión, usa el campo estático `popular`.
+- **Analítica de tráfico**: el sitio se sirve desde Cloudflare con **Cloudflare Web Analytics** activado (visitas, páginas, referrers).
 - **Header responsive (móvil)**: el nav pasa a dos filas vía grid (marca+cuenta / enlaces+buscador), eliminando el desbordamiento horizontal de la página en celulares.
 - **Fix del enlace activo en móvil**: "Inicio" dejaba de verse más alto/desparejo que "Explorar"; los `.nav__link` ahora son cajas atómicas (`inline-flex` + `nowrap`) y el subrayado activo vuelve a renderizarse (antes quedaba con ancho 0).
 - Agregado `rating` a todos los juegos y `url` oficial a las herramientas en `js/data.js`.

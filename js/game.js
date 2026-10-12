@@ -26,6 +26,9 @@
 
       this.init();
       this.current = game;
+      if (global.NOXIS.Analytics) {
+        global.NOXIS.Analytics.track("open", { gameId: game.id });
+      }
       this.root.innerHTML = this.render(game);
       this.bindEvents(game);
 
@@ -86,17 +89,23 @@
       // Acción principal: Descargar (abre el enlace externo del juego).
       const dl = $(".btn-primary", this.root);
       if (dl && game.links && game.links.download) {
-        dl.addEventListener("click", () =>
-          window.open(game.links.download, "_blank", "noopener,noreferrer")
-        );
+        dl.addEventListener("click", () => {
+          if (global.NOXIS.Analytics) {
+            global.NOXIS.Analytics.track("download", { gameId: game.id });
+          }
+          window.open(game.links.download, "_blank", "noopener,noreferrer");
+        });
       }
 
       // Acción secundaria: Comprar (abre el enlace externo del juego).
       const buy = $(".btn-secondary", this.root);
       if (buy && game.links && game.links.purchase) {
-        buy.addEventListener("click", () =>
-          window.open(game.links.purchase, "_blank", "noopener,noreferrer")
-        );
+        buy.addEventListener("click", () => {
+          if (global.NOXIS.Analytics) {
+            global.NOXIS.Analytics.track("purchase", { gameId: game.id });
+          }
+          window.open(game.links.purchase, "_blank", "noopener,noreferrer");
+        });
       }
 
       // Galería horizontal (pasar imágenes de izquierda a derecha).

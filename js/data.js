@@ -272,6 +272,23 @@
     { id: "utorrent",    name: "µTorrent",     url: "https://www.utorrent.com/intl/es/downloads/win/" },
   ];
 
+  /* Popularidad dinámica cargada desde el backend de interacciones
+     (Cloudflare Worker). Mapa { gameId: score }. null = sin cargar. */
+  let popularity = null;
+
+  /* Orden "popular": con datos de interacciones, ordena por score
+     ponderado (desempate por el campo estático `popular`). Sin datos
+     (arranque en frío / sin conexión), usa solo el campo estático. */
+  const comparePopular = (a, b) => {
+    const hasData = popularity && Object.keys(popularity).length > 0;
+    if (hasData) {
+      const sa = Number(popularity[a.id]) || 0;
+      const sb = Number(popularity[b.id]) || 0;
+      if (sb !== sa) return sb - sa;
+    }
+    return (b.popular || 0) - (a.popular || 0);
+  };
+
   /* Configuración de las secciones de la Home.
      Cada sección define cómo se seleccionan los juegos. */
   const sections = [
@@ -280,7 +297,7 @@
     { key: "new", heading: "Nuevos",
       select: (list) => [...list].sort((a, b) => b.year - a.year).slice(0, 8) },
     { key: "popular", heading: "Más populares",
-      select: (list) => [...list].sort((a, b) => b.popular - a.popular).slice(0, 8) },
+      select: (list) => [...list].sort(comparePopular).slice(0, 8) },
   ];
 
   /* Utilidades pequeñas de orden. */
@@ -290,6 +307,31 @@
   /* API pública del módulo de datos.
      Sustituir el interior por Firebase manteniendo la misma forma de retorno. */
   const Data = {
+    /* Carga (opcional) la popularidad calculada por el backend de
+       interacciones. Si falla o no hay backend, se conserva el orden
+       estático basado en el campo `popular`. */
+    async init() {
+      const endpoint =
+        global.NOXIS && global.NOXIS.Analytics && global.NOXIS.Analytics.endpoint;
+      if (!endpoint) return;
+      // En desarrollo local no se consulta el backend.
+      const isLocal =
+        location.protocol === "file:" ||
+        ["localhost", "127.0.0.1", ""].indexOf(location.hostname) !== -1;
+      if (isLocal) return;
+      try {
+        const res = await fetch(endpoint + "/popular");
+        if (!res.ok) return;
+        const data = await res.json();
+        if (data && typeof data === "object") {
+          popularity = data;
+          document.dispatchEvent(new CustomEvent("noxis:popularity"));
+        }
+      } catch (e) {
+        /* silencioso: se conserva el orden estático */
+      }
+    },
+
     getAllGames() {
       return games;
     },
@@ -335,7 +377,7 @@
       if (year) list = list.filter((g) => g.year === year);
 
       if (sort === "recent") list.sort((a, b) => b.year - a.year);
-      else if (sort === "popular") list.sort((a, b) => b.popular - a.popular);
+      else if (sort === "popular") list.sort(comparePopular);
       else if (sort === "az") list.sort((a, b) => a.title.localeCompare(b.title));
 
       return list;
