@@ -1,0 +1,22 @@
+# Sistema / OS
+Thumbs.db
+desktop.ini
+.DS_Store
+
+# Editores / IDE
+.vscode/
+.idea/
+*.suo
+*.user
+
+# Contenedor de juegos (NO publicar: archivos pesados / con posible copyright)
+Contenedor de juegos/
+
+# Temporales y logs
+*.tmp
+*.log
+npm-debug.log*
+
+# Entorno
+.env
+.env.local

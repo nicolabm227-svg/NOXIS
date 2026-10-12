@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="NOXIS - Catálogo de juegos. Explora los títulos más destacados." />
+  <title>NOXIS — Inicio</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="css/global.css?v=8" />
+  <link rel="stylesheet" href="css/components.css?v=8" />
+  <link rel="stylesheet" href="css/home.css?v=8" />
+  <link rel="stylesheet" href="css/explore.css?v=8" />
+  <link rel="stylesheet" href="css/game.css?v=8" />
+</head>
+<body>
+
+  <!-- ===== Loader inicial ===== -->
+  <div id="app-loader" class="loader" aria-hidden="true">
+    <div class="loader__mark">
+      <span class="loader__dot"></span><span class="loader__dot"></span><span class="loader__dot"></span>
+    </div>
+    <p class="loader__text">Cargando catálogo</p>
+  </div>
+
+  <!-- ===== Navegación superior ===== -->
+  <header class="site-header" id="site-header">
+    <nav class="nav container" aria-label="Navegación principal">
+      <a href="#" class="brand" id="brand-link" aria-label="NOXIS inicio">
+        <span class="brand__icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8">
+            <path d="M13 2 4 14h6l-1 8 9-12h-6l1-8z" />
+          </svg>
+        </span>
+        <span class="brand__name">NOXIS</span>
+      </a>
+
+      <ul class="nav__links">
+        <li><a href="#" class="nav__link is-active" data-route="home">Inicio</a></li>
+        <li><a href="#" class="nav__link" data-route="explore">Explorar</a></li>
+      </ul>
+
+      <div class="nav__search" role="search">
+        <svg class="nav__search-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="7" />
+          <path d="m21 21-4.3-4.3" />
+        </svg>
+        <input id="global-search" type="search" placeholder="Buscar juegos…" aria-label="Buscar juegos" autocomplete="off" />
+        <div class="search-suggest is-hidden" id="search-suggest" role="listbox" aria-label="Sugerencias de búsqueda"></div>
+      </div>
+
+      <div class="nav__account" id="account-slot">
+        <!-- Espacio reservado para futuras funciones de usuario -->
+        <button class="nav__account-btn" type="button" disabled aria-label="Cuenta (próximamente)">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8">
+            <circle cx="12" cy="8" r="3.5" />
+            <path d="M4.5 20c.6-3.2 3.3-5 7.5-5s6.9 1.8 7.5 5" />
+          </svg>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <!-- ===== Vista: Inicio ===== -->
+  <main id="view-home" class="home">
+    <div class="container">
+
+      <!-- Intro / hero -->
+      <section class="home__intro" aria-label="Bienvenida">
+        <p class="home__eyebrow">Catálogo curado</p>
+        <h1 class="home__title">Descubre tu próxima <span class="text-grad">aventura</span></h1>
+        <p class="home__subtitle">Una selección visual de juegos seleccionados con cuidado, lista para explorar.</p>
+      </section>
+
+      <!-- Secciones de contenido (llenadas por JS) -->
+      <section class="carousel-section" data-section="featured" aria-labelledby="heading-featured">
+        <div class="section-head">
+          <h2 class="section-head__title" id="heading-featured">Destacados</h2>
+          <button class="section-head__more" type="button">Ver todo</button>
+        </div>
+        <div class="cards-grid" id="grid-featured"></div>
+      </section>
+
+      <section class="carousel-section" data-section="new" aria-labelledby="heading-new">
+        <div class="section-head">
+          <h2 class="section-head__title" id="heading-new">Nuevos</h2>
+          <button class="section-head__more" type="button">Ver todo</button>
+        </div>
+        <div class="cards-grid" id="grid-new"></div>
+      </section>
+
+      <section class="carousel-section" data-section="popular" aria-labelledby="heading-popular">
+        <div class="section-head">
+          <h2 class="section-head__title" id="heading-popular">Más populares</h2>
+          <button class="section-head__more" type="button">Ver todo</button>
+        </div>
+        <div class="cards-grid" id="grid-popular"></div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- ===== Vista: Explorar ===== -->
+  <main id="view-explore" class="explore is-hidden" aria-hidden="true">
+    <div class="container">
+
+      <!-- Cabecera -->
+      <header class="explore__header">
+        <div class="explore__heading">
+          <p class="home__eyebrow">Catálogo completo</p>
+          <h1 class="explore__title">Explorar</h1>
+          <p class="home__subtitle">Navega toda la biblioteca y filtra por categoría, género, sistema o año.</p>
+        </div>
+        <div class="explore__sort">
+          <label class="explore__sort-label" for="explore-sort">Ordenar</label>
+          <select id="explore-sort" class="explore__select">
+            <option value="recent">Más recientes</option>
+            <option value="popular">Más populares</option>
+            <option value="az">A-Z</option>
+          </select>
+        </div>
+      </header>
+
+      <!-- Layout: sidebar + catálogo -->
+      <div class="explore__layout">
+
+        <!-- Sidebar de filtros -->
+        <aside class="explore__sidebar" aria-label="Filtros">
+          <section class="panel filters">
+            <h2 class="panel__title">Filtros</h2>
+
+            <div class="accordion" id="filters-accordion">
+              <div class="accordion__item" data-filter="category">
+                <button class="accordion__head" type="button" aria-expanded="false">
+                  <span>Categoría</span>
+                  <svg class="accordion__chevron" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                    <path d="m6 9 6 6 6-6" />
+                  </svg>
+                </button>
+                <div class="accordion__body">
+                  <div class="accordion__content">
+                    <div class="accordion__options" id="filter-category" role="list"></div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="accordion__item" data-filter="genre">
+                <button class="accordion__head" type="button" aria-expanded="false">
+                  <span>Género</span>
+                  <svg class="accordion__chevron" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                    <path d="m6 9 6 6 6-6" />
+                  </svg>
+                </button>
+                <div class="accordion__body">
+                  <div class="accordion__content">
+                    <div class="accordion__options" id="filter-genre" role="list"></div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="accordion__item" data-filter="os">
+                <button class="accordion__head" type="button" aria-expanded="false">
+                  <span>Sistema operativo</span>
+                  <svg class="accordion__chevron" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                    <path d="m6 9 6 6 6-6" />
+                  </svg>
+                </button>
+                <div class="accordion__body">
+                  <div class="accordion__content">
+                    <div class="accordion__options" id="filter-os" role="list"></div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="accordion__item" data-filter="year">
+                <button class="accordion__head" type="button" aria-expanded="false">
+                  <span>Año</span>
+                  <svg class="accordion__chevron" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                    <path d="m6 9 6 6 6-6" />
+                  </svg>
+                </button>
+                <div class="accordion__body">
+                  <div class="accordion__content">
+                    <div class="accordion__options" id="filter-year" role="list"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <button class="filters__clear" type="button" id="filters-clear">Limpiar filtros</button>
+          </section>
+
+          <section class="panel tools">
+            <h2 class="panel__title">Herramientas</h2>
+            <ul class="tools__list" id="tools-list"></ul>
+          </section>
+        </aside>
+
+        <!-- Catálogo -->
+        <section class="explore__catalog" aria-label="Catálogo de juegos">
+          <div class="explore__meta">
+            <span class="explore__count" id="explore-count"></span>
+          </div>
+          <div class="cards-grid explore__grid" id="explore-grid"></div>
+          <nav class="pagination" id="explore-pagination" aria-label="Paginación"></nav>
+        </section>
+
+      </div>
+    </div>
+  </main>
+
+  <!-- ===== Ventana del juego (overlay) ===== -->
+  <div id="view-game" class="game-window" role="dialog" aria-modal="true" aria-hidden="true"></div>
+
+  <!-- ===== Overlay de navegación con tarjeta (sin popup) ===== -->
+  <div id="app-backdrop" class="backdrop is-hidden" aria-hidden="true"></div>
+
+  <script src="js/data.js?v=8"></script>
+  <script src="js/app.js?v=8"></script>
+  <script src="js/home.js?v=8"></script>
+  <script src="js/explore.js?v=8"></script>
+  <script src="js/game.js?v=8"></script>
+</body>
+</html>

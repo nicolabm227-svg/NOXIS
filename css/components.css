@@ -1,0 +1,432 @@
+/* ============================================================
+   NOXIS — components.css
+   Componentes reutilizables: header, loader, tarjetas, etc.
+   ============================================================ */
+
+/* ---------- Loader inicial ---------- */
+.loader {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  background: var(--bg);
+  transition: opacity 0.5s var(--ease), visibility 0.5s;
+}
+
+.loader.is-done {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.loader__mark {
+  display: flex;
+  gap: 8px;
+}
+
+.loader__dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 12px var(--accent-glow);
+  animation: dot-pulse 1.2s var(--ease) infinite;
+}
+.loader__dot:nth-child(2) { animation-delay: 0.15s; }
+.loader__dot:nth-child(3) { animation-delay: 0.3s; }
+
+@keyframes dot-pulse {
+  0%, 100% { transform: scale(0.6); opacity: 0.4; }
+  50%      { transform: scale(1);   opacity: 1; }
+}
+
+.loader__text {
+  font-size: 0.8rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+/* ---------- Navegación superior ---------- */
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  height: var(--nav-h);
+  background: linear-gradient(180deg, rgba(5, 6, 10, 0.82), rgba(5, 6, 10, 0.62));
+  backdrop-filter: blur(18px) saturate(1.15);
+  -webkit-backdrop-filter: blur(18px) saturate(1.15);
+  border-bottom: 1px solid var(--line);
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  gap: clamp(14px, 2.6vw, 32px);
+  height: var(--nav-h);
+}
+
+/* Marca */
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.brand__icon {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 9px;
+  color: #fff;
+  background: var(--grad-brand);
+  box-shadow: 0 4px 14px var(--accent-glow), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+}
+
+.brand__name {
+  font-family: var(--font-display);
+  font-weight: 800;
+  letter-spacing: 0.24em;
+  font-size: 0.94rem;
+  color: var(--text);
+}
+
+/* Enlaces */
+.nav__links {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding-left: 2px;
+}
+
+.nav__link {
+  position: relative;
+  padding: 7px 13px;
+  border-radius: var(--radius-pill);
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--text-dim);
+  transition: color var(--dur) var(--ease), background var(--dur) var(--ease);
+}
+
+.nav__link:hover {
+  color: var(--text);
+  background: rgba(148, 163, 184, 0.07);
+}
+
+.nav__link.is-active {
+  color: var(--text);
+}
+
+.nav__link.is-active::after {
+  content: "";
+  position: absolute;
+  left: 13px;
+  right: 13px;
+  bottom: 2px;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--grad-brand);
+}
+
+/* Buscador */
+.nav__search {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  flex: 1;
+  max-width: 320px;
+  margin-left: auto;
+  padding: 7px 13px;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.025);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.02);
+  transition: border-color var(--dur) var(--ease), background var(--dur) var(--ease),
+              box-shadow var(--dur) var(--ease);
+}
+
+.nav__search:focus-within {
+  border-color: rgba(110, 168, 255, 0.35);
+  background: rgba(59, 130, 246, 0.05);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.02);
+}
+
+.nav__search-icon {
+  color: var(--text-faint);
+  flex-shrink: 0;
+}
+
+.nav__search input {
+  width: 100%;
+  border: none;
+  outline: none;
+  background: transparent;
+  color: var(--text);
+  font-size: 0.88rem;
+}
+
+.nav__search input::placeholder {
+  color: var(--text-faint);
+}
+
+/* ---------- Sugerencias del buscador ---------- */
+.search-suggest {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  right: auto;
+  width: 340px;
+  max-width: calc(100vw - 32px);
+  z-index: 60;
+  overflow: hidden;
+  padding: 5px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--line-strong);
+  background: var(--surface);
+  box-shadow: var(--shadow-lift);
+}
+
+.search-suggest__item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 5px 7px;
+  border-radius: 8px;
+  text-align: left;
+  transition: background var(--dur) var(--ease);
+}
+
+.search-suggest__item + .search-suggest__item {
+  margin-top: 1px;
+}
+
+.search-suggest__item:hover,
+.search-suggest__item:focus-visible {
+  background: rgba(59, 130, 246, 0.08);
+}
+
+.search-suggest__thumb {
+  flex-shrink: 0;
+  width: 28px;
+  height: 38px;
+  object-fit: cover;
+  border-radius: 4px;
+  border: 1px solid var(--line);
+  background: var(--bg-elev);
+}
+
+.search-suggest__name {
+  font-size: 0.84rem;
+  font-weight: 500;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Cuenta (reservada) */
+.nav__account {
+  flex-shrink: 0;
+}
+
+.nav__account-btn {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+  color: var(--text-dim);
+  background: rgba(255, 255, 255, 0.025);
+  transition: color var(--dur) var(--ease), border-color var(--dur) var(--ease);
+}
+
+.nav__account-btn:hover {
+  color: var(--text);
+  border-color: var(--line-strong);
+}
+
+.nav__account-btn:disabled {
+  cursor: not-allowed;
+}
+
+/* ---------- Tarjetas de juegos ---------- */
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+
+/* Mensaje cuando una búsqueda no arroja resultados. */
+.cards-empty {
+  grid-column: 1 / -1;
+  padding: 40px 8px;
+  text-align: center;
+  color: var(--text-faint);
+  font-size: 0.9rem;
+}
+
+.game-card {
+  position: relative;
+  display: block;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  box-shadow: var(--shadow-card);
+  transform: translateZ(0);
+  transition: transform var(--dur) var(--ease), box-shadow var(--dur) var(--ease),
+              border-color var(--dur) var(--ease);
+}
+
+/* Hover sutil: solo en dispositivos con soporte real de hover.
+   Evita el estado "pegado" tras un tap en pantallas táctiles. */
+@media (hover: hover) {
+  .game-card:hover {
+    transform: translateY(-3px);
+    border-color: rgba(110, 168, 255, 0.28);
+    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.5),
+                0 0 0 1px rgba(110, 168, 255, 0.12);
+  }
+}
+
+.game-card__cover {
+  position: relative;
+  aspect-ratio: 2 / 3;
+  overflow: hidden;
+  background: var(--bg-elev);
+}
+
+.game-card__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: scale(1.015);
+  filter: saturate(0.94) contrast(1.02);
+  transition: transform 0.5s var(--ease), filter 0.34s var(--ease);
+  will-change: transform;
+}
+
+@media (hover: hover) {
+  .game-card:hover .game-card__img {
+    transform: scale(1.035);
+    filter: saturate(0.94) contrast(1.02) brightness(1.04);
+  }
+}
+
+/* Degradado + contenido sobre la imagen.
+   Padding inferior ligeramente mayor para que el texto respire. */
+.game-card__body {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 16px 16px 18px;
+  background: var(--grad-card);
+}
+
+/* Degradado superior sutil para profundidad */
+.game-card__body::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--grad-card-top);
+  pointer-events: none;
+}
+
+/* Título: elemento protagonista de la información.
+   Color blanco, display, jerarquía clara. */
+.game-card__title {
+  position: relative;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 0.98rem;
+  line-height: 1.22;
+  letter-spacing: -0.005em;
+  color: var(--text);
+  text-shadow: 0 1px 10px rgba(0, 0, 0, 0.7);
+  max-width: 18ch;
+  margin-bottom: 4px;
+}
+
+/* Metadata: una sola línea discreta debajo del título.
+   Sin uppercase ni tracking agresivo: lectura natural. */
+.game-card__meta {
+  position: relative;
+  font-family: var(--font-body);
+  font-size: 0.82rem;
+  font-weight: 500;
+  letter-spacing: 0;
+  color: var(--text-dim);
+  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.6);
+}
+
+/* Línea secundaria adicional (usada por Explore; el Home ya no la renderiza).
+   Se mantienen las reglas base para no afectar esa vista. */
+.game-card__sub {
+  position: relative;
+  margin-top: 4px;
+  font-size: 0.76rem;
+  letter-spacing: 0.01em;
+  color: rgba(240, 244, 252, 0.78);
+  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.6);
+}
+
+/* Aparición progresiva de tarjetas */
+.game-card {
+  opacity: 0;
+  transform: translateY(14px);
+}
+
+.game-card.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.55s var(--ease), transform 0.55s var(--ease),
+              box-shadow var(--dur) var(--ease), border-color var(--dur) var(--ease);
+}
+@media (hover: hover) {
+  .game-card.is-visible:hover {
+    transform: translateY(-3px);
+  }
+}
+
+/* ---------- Backdrop para transición entre vistas ---------- */
+.backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  background: var(--bg);
+  opacity: 0;
+  transition: opacity 0.28s var(--ease);
+  pointer-events: none;
+}
+
+.backdrop.is-visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 1024px) {
+  .cards-grid { grid-template-columns: repeat(3, 1fr); }
+}
+
+@media (max-width: 768px) {
+  .cards-grid { grid-template-columns: repeat(2, 1fr); gap: 14px; }
+}
+
+@media (max-width: 480px) {
+  .cards-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+  .game-card__body { padding: 12px; }
+  .game-card__title { font-size: 0.9rem; }
+}

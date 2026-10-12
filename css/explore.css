@@ -1,0 +1,426 @@
+/* ============================================================
+   NOXIS — explore.css
+   Estilos específicos de la pantalla Explorar.
+   Reutiliza componentes de components.css (header, tarjetas).
+   ============================================================ */
+
+/* ---------- Cabecera ---------- */
+.explore {
+  padding: clamp(34px, 6vw, 68px) 0 clamp(56px, 8vw, 90px);
+}
+
+.explore__header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin-bottom: clamp(28px, 4vw, 40px);
+  animation: rise-in 0.7s var(--ease) both;
+}
+
+.explore__title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(1.6rem, 3.2vw, 2.3rem);
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  color: var(--text);
+}
+
+.explore__heading .home__subtitle {
+  margin-top: 10px;
+  font-size: 0.94rem;
+}
+
+/* Ordenamiento */
+.explore__sort {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.explore__sort-label {
+  font-size: 0.76rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+}
+
+.explore__select {
+  appearance: none;
+  -webkit-appearance: none;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background-color: rgba(255, 255, 255, 0.025);
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='16' height='16' fill='none' stroke='%2398a1b0' stroke-width='2'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  color: var(--text);
+  font-size: 0.86rem;
+  font-weight: 500;
+  padding: 9px 34px 9px 14px;
+  cursor: pointer;
+  transition: border-color var(--dur) var(--ease), background-color var(--dur) var(--ease),
+              box-shadow var(--dur) var(--ease);
+}
+
+.explore__select:hover {
+  border-color: var(--line-strong);
+  background-color: rgba(255, 255, 255, 0.04);
+}
+
+.explore__select:focus {
+  outline: none;
+  border-color: rgba(110, 168, 255, 0.35);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.08);
+}
+
+.explore__select option {
+  background: var(--bg-elev);
+  color: var(--text);
+}
+
+/* ---------- Layout: sidebar + catálogo ---------- */
+.explore__layout {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  gap: clamp(24px, 3vw, 40px);
+  align-items: start;
+  animation: rise-in 0.7s var(--ease) both;
+  animation-delay: 0.06s;
+}
+
+/* ---------- Sidebar / paneles ---------- */
+.explore__sidebar {
+  position: sticky;
+  top: calc(var(--nav-h) + 16px);
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Panel base compartido por Filtros y Herramientas */
+.panel {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.028), rgba(255, 255, 255, 0.014));
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  padding: 16px;
+}
+
+.panel__title {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 0.72rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin-bottom: 12px;
+}
+
+/* ---------- Accordion de filtros ---------- */
+.accordion {
+  display: flex;
+  flex-direction: column;
+}
+
+.accordion__item {
+  border-top: 1px solid var(--line);
+}
+
+.accordion__item:first-child {
+  border-top: none;
+}
+
+.accordion__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  width: 100%;
+  padding: 11px 2px;
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: var(--text-dim);
+  text-align: left;
+  cursor: pointer;
+  transition: color var(--dur) var(--ease);
+}
+
+.accordion__head:hover {
+  color: var(--text);
+}
+
+.accordion__head:focus-visible {
+  outline: none;
+  color: var(--text);
+}
+
+.accordion__chevron {
+  flex-shrink: 0;
+  color: var(--text-faint);
+  transition: transform var(--dur) var(--ease), color var(--dur) var(--ease);
+}
+
+.accordion__item.is-open .accordion__chevron {
+  transform: rotate(180deg);
+  color: var(--accent-soft);
+}
+
+.accordion__item.is-open .accordion__head {
+  color: var(--text);
+}
+
+/* Cuerpo desplegable animado (grid-rows 0fr -> 1fr) */
+.accordion__body {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows var(--dur) var(--ease);
+}
+
+.accordion__item.is-open .accordion__body {
+  grid-template-rows: 1fr;
+}
+
+.accordion__content {
+  overflow: hidden;
+  min-height: 0;
+}
+
+.accordion__options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 2px 2px 12px;
+}
+
+/* Píldoras de filtro */
+.filter-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 5px 11px;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.02);
+  font-size: 0.76rem;
+  font-weight: 500;
+  color: var(--text-dim);
+  cursor: pointer;
+  transition: color var(--dur) var(--ease), border-color var(--dur) var(--ease),
+              background var(--dur) var(--ease), box-shadow var(--dur) var(--ease);
+}
+
+.filter-chip:hover {
+  color: var(--text);
+  border-color: var(--line-strong);
+}
+
+.filter-chip.is-active {
+  color: #fff;
+  border-color: rgba(110, 168, 255, 0.45);
+  background: rgba(59, 130, 246, 0.14);
+  box-shadow: 0 0 0 1px rgba(59, 130, 246, 0.18);
+}
+
+.filter-chip:focus-visible {
+  outline: none;
+  border-color: rgba(110, 168, 255, 0.5);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+/* Limpiar filtros (acción secundaria) */
+.filters__clear {
+  margin-top: 4px;
+  padding: 6px 8px 2px;
+  border-top: 1px solid var(--line);
+  width: 100%;
+  font-size: 0.76rem;
+  font-weight: 500;
+  color: var(--text-faint);
+  text-align: left;
+  cursor: pointer;
+  transition: color var(--dur) var(--ease);
+}
+
+.filters__clear:hover {
+  color: var(--accent-soft);
+}
+
+.filters__clear:focus-visible {
+  outline: none;
+  color: var(--accent-soft);
+}
+
+.filters__clear:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* ---------- Herramientas ---------- */
+.tools__list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.tool-item {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  width: 100%;
+  padding: 8px 10px;
+  border-radius: 9px;
+  border: 1px solid transparent;
+  color: var(--text-dim);
+  text-align: left;
+  font-size: 0.84rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: color var(--dur) var(--ease), background var(--dur) var(--ease),
+              border-color var(--dur) var(--ease);
+}
+
+.tool-item:hover {
+  color: var(--text);
+  background: rgba(255, 255, 255, 0.03);
+  border-color: var(--line);
+}
+
+.tool-item__icon {
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  flex-shrink: 0;
+  border-radius: 7px;
+  color: var(--accent-soft);
+  background: rgba(59, 130, 246, 0.12);
+  border: 1px solid rgba(59, 130, 246, 0.18);
+}
+
+/* ---------- Catálogo ---------- */
+.explore__catalog {
+  min-width: 0;
+}
+
+.explore__meta {
+  display: flex;
+  align-items: center;
+  min-height: 28px;
+  margin-bottom: 16px;
+}
+
+.explore__count {
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--text-dim);
+}
+
+/* Tarjetas ligeramente más pequeñas en Explorar */
+.explore__grid .game-card__body {
+  padding: 13px;
+}
+
+.explore__grid .game-card__title {
+  font-size: 0.9rem;
+}
+
+.explore__grid .game-card__sub {
+  font-size: 0.72rem;
+}
+
+/* ---------- Paginación ---------- */
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-top: 34px;
+}
+
+.pagination__btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 34px;
+  height: 34px;
+  padding: 0 10px;
+  border-radius: 9px;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.02);
+  font-size: 0.84rem;
+  font-weight: 500;
+  color: var(--text-dim);
+  cursor: pointer;
+  transition: color var(--dur) var(--ease), border-color var(--dur) var(--ease),
+              background var(--dur) var(--ease), box-shadow var(--dur) var(--ease);
+}
+
+.pagination__btn:hover:not(:disabled) {
+  color: var(--text);
+  border-color: var(--line-strong);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.pagination__btn.is-active {
+  color: #fff;
+  border-color: rgba(110, 168, 255, 0.5);
+  background: rgba(59, 130, 246, 0.16);
+  box-shadow: 0 0 0 1px rgba(59, 130, 246, 0.2);
+}
+
+.pagination__btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.pagination__nav {
+  padding: 0;
+  min-width: 34px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pagination__dots {
+  display: inline-flex;
+  align-items: center;
+  padding: 0 4px;
+  color: var(--text-faint);
+  font-size: 0.8rem;
+  letter-spacing: 1px;
+  user-select: none;
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 900px) {
+  .explore__layout {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+
+  .explore__sidebar {
+    position: static;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    align-items: start;
+  }
+}
+
+@media (max-width: 560px) {
+  .explore__header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+
+  .explore__sidebar {
+    grid-template-columns: 1fr;
+  }
+}
