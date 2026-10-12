@@ -103,9 +103,13 @@
   align-items: center;
   gap: 4px;
   padding-left: 2px;
+  flex-shrink: 0;
 }
 
 .nav__link {
+  display: inline-flex;
+  align-items: center;
+  white-space: nowrap;
   position: relative;
   padding: 7px 13px;
   border-radius: var(--radius-pill);
@@ -142,6 +146,7 @@
   align-items: center;
   gap: 9px;
   flex: 1;
+  min-width: 0;
   max-width: 320px;
   margin-left: auto;
   padding: 7px 13px;
@@ -166,6 +171,7 @@
 
 .nav__search input {
   width: 100%;
+  min-width: 0;
   border: none;
   outline: none;
   background: transparent;
@@ -417,6 +423,44 @@
 }
 
 /* ---------- Responsive ---------- */
+
+/* Header en móvil: dos filas deterministas.
+   Fila 1: marca + cuenta | Fila 2: enlaces + buscador.
+   Evita el desbordamiento horizontal del nav y la fragmentación
+   de los enlaces cuando el ancho no alcanza. */
+@media (max-width: 768px) {
+  .site-header { height: auto; }
+
+  .nav {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    grid-template-areas:
+      "brand  account"
+      "links  search";
+    align-items: center;
+    row-gap: 12px;
+    column-gap: 14px;
+    height: auto;
+    padding-block: 10px;
+  }
+
+  .brand { grid-area: brand; }
+  .nav__account { grid-area: account; justify-self: end; }
+  .nav__links { grid-area: links; }
+  .nav__search {
+    grid-area: search;
+    max-width: none;
+    margin-left: 0;
+  }
+
+  /* El panel de sugerencias se alinea al borde derecho para
+     no desbordar la pantalla en anchos reducidos. */
+  .search-suggest {
+    left: auto;
+    right: 0;
+  }
+}
+
 @media (max-width: 1024px) {
   .cards-grid { grid-template-columns: repeat(3, 1fr); }
 }

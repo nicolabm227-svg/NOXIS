@@ -266,7 +266,7 @@
      en pestaña nueva desde explore.js (target="_blank", rel="noopener noreferrer"). */
   const tools = [
     { id: "winrar",      name: "WinRAR",       url: "https://winrar.es/descargas" },
-    { id: "ultraiso",    name: "UltraISO",     url: "https://ultraiso.es.download.it/" },
+    { id: "ultraiso",    name: "UltraISO",     url: "https://centercorpec.wixsite.com/estalingradocorp/post/opten-ultraiso" },
     { id: "daemontools", name: "DAEMON Tools", url: "https://www.daemon-tools.cc/spa/downloads" },
     { id: "qbittorrent", name: "qBittorrent",  url: "https://www.qbittorrent.org/" },
     { id: "utorrent",    name: "µTorrent",     url: "https://www.utorrent.com/intl/es/downloads/win/" },

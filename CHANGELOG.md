@@ -16,6 +16,8 @@ Registro del estado conocido y la evolución del proyecto. No se dispone de fech
 
 ### Cambios recientes
 
+- **Header responsive (móvil)**: el nav pasa a dos filas vía grid (marca+cuenta / enlaces+buscador), eliminando el desbordamiento horizontal de la página en celulares.
+- **Fix del enlace activo en móvil**: "Inicio" dejaba de verse más alto/desparejo que "Explorar"; los `.nav__link` ahora son cajas atómicas (`inline-flex` + `nowrap`) y el subrayado activo vuelve a renderizarse (antes quedaba con ancho 0).
 - Agregado `rating` a todos los juegos y `url` oficial a las herramientas en `js/data.js`.
 - Agregada herramienta **qBittorrent** y actualizadas las URLs de las herramientas a las oficiales.
 - Convertida la ficha del juego de vista placeholder a **overlay** (`NOXIS.Game`).
