@@ -3,6 +3,10 @@ Thumbs.db
 desktop.ini
 .DS_Store
 
+# Logo: fuente cruda (solo se versiona la imagen derivada assets/images/logo.webp)
+/Logo1.png
+/Logo.webp
+
 # Editores / IDE
 .vscode/
 .idea/

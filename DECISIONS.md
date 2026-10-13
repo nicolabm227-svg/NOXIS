@@ -88,6 +88,12 @@ El **sitio** se despliega automáticamente al hacer push; el **Worker** se despl
 
 Motivo: el Worker no está conectado a Git; su deploy es una acción manual deliberada.
 
+## 18. Identidad de marca: logo como imagen
+
+La marca del header (`NOXIS`) usa una **imagen** (`assets/images/logo.webp`) en lugar del ícono SVG original. La imagen se deriva de una fuente (`Logo1.png`, no versionada): se **recorta** y se le **elimina el fondo**, dejando fondo transparente. En el header se muestra **cuadrada, llenando** el espacio (`object-fit: cover`) con **esquinas redondeadas** (`--radius-sm`), sin caja, borde ni fondo detrás.
+
+Motivo: dar identidad visual propia al proyecto e integrar la marca con la UI oscura (sin el marco/fondo claros del archivo original).
+
 ## Decisiones NO tomadas (rechazadas por ahora)
 
 - **Framework JS** (React/Vue/Svelte): rechazado; se mantiene vanilla.

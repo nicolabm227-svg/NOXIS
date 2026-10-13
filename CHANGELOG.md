@@ -17,6 +17,7 @@ Registro del estado conocido y la evolución del proyecto. No se dispone de fech
 
 ### Cambios recientes
 
+- **Logo de marca**: el header usa `assets/images/logo.webp` (generado desde `Logo1.png`, recortado y con el fondo crema eliminado). Se muestra **cuadrado y llenando** el espacio del logo (`object-fit: cover`) con esquinas redondeadas (`--radius-sm`), sin caja, borde ni fondo detrás.
 - **Chip de tamaño en las tarjetas**: la vista previa de cada juego (Home y Explorar) ahora muestra el tamaño real (`specs.tamano`) como chip sobre la portada, sin necesidad de abrir la ficha.
 - **Publicado en producción (Cloudflare)**: el sitio se sirve desde Cloudflare Workers (`noxis-hub-app.nicolabarranco2.workers.dev`), con **deploy automático al hacer push a `main`**. Se abandonó GitHub Pages.
 - **Worker de ranking publicado**: `noxis-rank` desplegado en Cloudflare con binding a KV `NOXIS_EVENTS` (id `d41ce0b8a6894be9a5cafa4042a3cd54`). Endpoints verificados en vivo: `GET /popular` y `POST /event`.

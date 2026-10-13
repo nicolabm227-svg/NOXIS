@@ -92,7 +92,7 @@ Definidas en `:root`:
 
 - **Loader**: overlay de carga con tres puntos que pulsan.
 - **Chip de tamaño**: `.game-card__size`, pill translúcida sobre la portada (arriba a la derecha) con el tamaño real del juego; presente en las tarjetas de Home y Explorar.
-- **Header / nav**: sticky, con blur, contiene marca, enlaces (Inicio/Explorar), buscador y slot de cuenta (deshabilitado).
+- **Header / nav**: sticky, con blur, contiene la marca (logo `assets/images/logo.webp` en un cuadro de 30×30 con esquinas redondeadas y `object-fit: cover`), enlaces (Inicio/Explorar), buscador y slot de cuenta (deshabilitado).
 - **Tarjeta de juego** (`.game-card`): portada 2:3 con `object-fit: cover`, degradado inferior, meta (uppercase, acento), título y subtítulo. Hover: elevación + zoom leve + borde azul. Aparición progresiva por `IntersectionObserver`.
 - **Backdrop** (`#app-backdrop`): capa de transición entre vistas.
 

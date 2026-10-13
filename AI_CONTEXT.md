@@ -105,6 +105,7 @@ Detalle completo, URLs, verificaciones y rollback en [DEPLOY.md](DEPLOY.md).
 - **Backend de ranking**: `worker/index.js` + `worker/wrangler.toml`.
 - **Componentes compartidos**: `css/components.css`. **Tokens/paleta**: `css/global.css`.
 - **Portadas/galería**: `assets/images/games/<id>/portada.jpg` y `complementaria-N.jpg`.
+- **Logo de marca**: `assets/images/logo.webp` (generado desde `Logo1.png`, recortado, fondo transparente; en el header se muestra cuadrado con `object-fit: cover`).
 - **Material crudo**: `Contenedor de juegos/<Nombre>/` (gitignored).
 
 ## 10. Errores conocidos que no debés reintroducir

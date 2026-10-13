@@ -12,7 +12,7 @@ Fotografía del proyecto en el momento de redactar este documento. El código es
 - Router propio en `app.js` con estado `{ route, selectedGameId }`.
 - Vistas: `home` (`#view-home`) y `explore` (`#view-explore`). Transición con backdrop y scroll suave.
 - Loader inicial con mínimo de presencia visual (450 ms).
-- Header sticky con marca, enlaces Inicio/Explorar, buscador global y slot de cuenta (deshabilitado).
+- Header sticky con marca (imagen `assets/images/logo.webp`), enlaces Inicio/Explorar, buscador global y slot de cuenta (deshabilitado).
 
 ### Home
 - Tres secciones: *Destacados* (featured), *Nuevos* (más recientes), *Más populares* (orden por popularidad).

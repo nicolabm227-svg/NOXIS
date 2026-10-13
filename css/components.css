@@ -79,14 +79,19 @@
 }
 
 .brand__icon {
-  display: grid;
-  place-items: center;
+  position: relative;
   width: 30px;
   height: 30px;
-  border-radius: 9px;
-  color: #fff;
-  background: var(--grad-brand);
-  box-shadow: 0 4px 14px var(--accent-glow), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+
+.brand__icon img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .brand__name {
