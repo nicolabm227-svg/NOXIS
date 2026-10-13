@@ -46,9 +46,52 @@ Las herramientas se abren con `target="_blank"` y `rel="noopener noreferrer"` (m
 
 Uso de `aria-*` en vistas ocultas, overlays y controles; `aria-hidden`/`aria-label`; `prefers-reduced-motion` respetado en `global.css`.
 
+## 11. Hosting en Cloudflare Workers (no GitHub Pages)
+
+El sitio estático se aloja en **Cloudflare Workers** (con assets estáticos), conectado al repo de GitHub y desplegado automáticamente al hacer push a `main`. Se abandonó GitHub Pages.
+
+Motivo: despliegue automático simple, CDN, y la misma plataforma ofrece Web Analytics y Workers/ KV para el backend.
+
+## 12. Analítica de tráfico con Cloudflare Web Analytics
+
+Para "ver el tráfico" se usa **Cloudflare Web Analytics** (visitas, páginas, referrers, dispositivos), sin código en el sitio y sin cookies propias.
+
+Motivo: gratuito, sin cookies, activable desde el dashboard.
+
+## 13. Ranking por interacciones con Worker propio + KV
+
+Cloudflare Web Analytics **no** soporta eventos personalizados (clics por juego). Por eso el ranking se implementa con un **Cloudflare Worker propio** (`worker/index.js`) + **KV** (`NOXIS_EVENTS`), con endpoints `POST /event` y `GET /popular`.
+
+Motivo: control total de la métrica sin introducir otro proveedor.
+
+## 14. Métrica de popularidad: score ponderado con decaimiento
+
+El ranking usa un score `open=1, download=5, purchase=2` con **decaimiento exponencial de media vida 30 días** (lo reciente pesa más) y **dedupe por sesión/juego/tipo** (12 h) para evitar inflar con clics repetidos.
+
+Motivo: ponderar la intención (descargar > comprar > abrir) y evitar que datos viejos dominen para siempre.
+
+## 15. Popularidad dinámica con fallback estático
+
+`NOXIS.Data.init()` carga el score real y lo usa para ordenar; si no hay backend o no hay conexión, se usa el campo estático `popular`. Las vistas no cambian: se suscribe `home.js`/`explore.js` al evento `noxis:popularity`.
+
+Motivo: degradación elegante; el sitio nunca depende del backend para renderizar.
+
+## 16. Datos reales cargados desde "Contenedor de juegos" (gitignored)
+
+El material crudo de cada juego (portada, galería, `.torrent`, `informacion.txt`) vive en `Contenedor de juegos/`, que está en `.gitignore` (archivos pesados y con posible copyright). Lo que se publica es la copia en `assets/images/games/<id>/` y el objeto en `js/data.js`.
+
+Motivo: separar el material fuente del repo público.
+
+## 17. Front y Worker se despliegan distinto
+
+El **sitio** se despliega automáticamente al hacer push; el **Worker** se despliega a mano con `wrangler`. Se documenta explícitamente para evitar la falsa expectativa de que "todo se actualiza solo".
+
+Motivo: el Worker no está conectado a Git; su deploy es una acción manual deliberada.
+
 ## Decisiones NO tomadas (rechazadas por ahora)
 
 - **Framework JS** (React/Vue/Svelte): rechazado; se mantiene vanilla.
-- **Backend real / sistema de descargas**: no implementado; solo estructura visual.
-- **Autenticación**: no implementada.
-- **Test framework**: no se usa; la verificación es manual + `node --check`.
+- **Sistema de descargas propio / pagos**: no implementado; los botones abren enlaces externos.
+- **Autenticación / cuentas**: no implementada (slot de cuenta deshabilitado).
+- **Test framework**: no se usa; la verificación es manual + `node --check` (y, opcionalmente, un smoke test con Edge headless vía `playwright-core`).
+- **Firebase**: no implementado (intención de diseño, no código activo).

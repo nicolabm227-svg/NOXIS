@@ -22,6 +22,9 @@ Filosofía, convenciones y reglas para contribuir sin romper el proyecto.
 10. **No introduzcas frameworks** sin decisión explícita.
 11. **No reemplaces la arquitectura existente** (namespaces IIFE, `NOXIS.Data`) sin justificación.
 12. **No inventes funcionalidades como implementadas.**
+13. **Respetá el despliegue**: el sitio se publica solo con `git push`; el **Worker se despliega a mano** con `wrangler` (ver [DEPLOY.md](DEPLOY.md)).
+14. **Si tocás CSS/JS, subí `?v=N`** en `index.html` (cache-busting).
+15. **No commitees `Contenedor de juegos/`** (está en `.gitignore`; material crudo con posible copyright).
 13. **Actualizá la documentación** cuando cambie la arquitectura o el comportamiento.
 14. **No rediseñes componentes existentes** sin instrucción explícita (portada 2:3, paleta, layout de la ventana).
 
@@ -44,6 +47,22 @@ Filosofía, convenciones y reglas para contribuir sin romper el proyecto.
 2. Hacé el cambio mínimo.
 3. `node --check` antes y después.
 4. Verificá consola limpia en el navegador.
+
+## Cómo agregar un juego
+
+1. Poné el material crudo en `Contenedor de juegos/<Nombre>/` (gitignored).
+2. Copiá la portada a `assets/images/games/<id>/portada.jpg` y la galería a `assets/images/games/<id>/complementaria-N.jpg`.
+3. Agregá un objeto al array `games` de `js/data.js` con la estructura documentada en [ARCHITECTURE.md](ARCHITECTURE.md#estructura-de-un-juego).
+3. `node --check js/data.js`.
+4. Subí `?v=N` en `index.html` y hacé `git push` (se publica solo).
+
+No toques los módulos de vista: facetas, secciones y ficha se generan a partir de los datos.
+
+## Despliegue
+
+- **Sitio**: `git push origin main` → Cloudflare publica automáticamente (≈1–2 min).
+- **Worker** (si cambiaste `worker/`): `npx.cmd wrangler deploy` desde `worker/`.
+- Detalle, URLs y rollback: [DEPLOY.md](DEPLOY.md).
 
 ## Pruebas / validación
 
@@ -68,7 +87,9 @@ Filosofía, convenciones y reglas para contribuir sin romper el proyecto.
 ## Checklist antes de enviar un cambio
 
 - [ ] `node --check` en los JS modificados.
-- [ ] Sin errores ni 404 en consola.
+- [ ] Sin errores ni 404 en consola (salvo el 404 conocido de `favicon.ico`).
 - [ ] Flujos probados (Home, Explorar, ventana del juego).
 - [ ] Responsive verificado.
+- [ ] Si cambió CSS/JS: subido `?v=N` en `index.html`.
+- [ ] Si cambió el Worker: `wrangler deploy` ejecutado.
 - [ ] Documentación actualizada (PROJECT_STATUS, CHANGELOG, etc. si aplica).

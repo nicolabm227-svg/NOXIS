@@ -2,6 +2,8 @@
 
 Fotografía del proyecto en el momento de redactar este documento. El código es la fuente de verdad; si algo aquí contradice el código, el código gana.
 
+> Para despliegue y operación (Cloudflare, Worker, KV), ver [DEPLOY.md](DEPLOY.md).
+
 ---
 
 ## Implementado
@@ -13,94 +15,83 @@ Fotografía del proyecto en el momento de redactar este documento. El código es
 - Header sticky con marca, enlaces Inicio/Explorar, buscador global y slot de cuenta (deshabilitado).
 
 ### Home
-- Tres secciones: *Destacados* (featured), *Nuevos* (más recientes), *Más populares* (popular).
-- Cada sección genera hasta 8 tarjetas desde `NOXIS.Data.getSections()`.
-- Buscador global que reordena la sección *Destacados* con resultados (`Data.searchGames`).
-- Botones "Ver todo" → navegan a Explorar.
-- Aparición progresiva de tarjetas con `IntersectionObserver`.
+- Tres secciones: *Destacados* (featured), *Nuevos* (más recientes), *Más populares* (orden por popularidad).
+- Buscador global y botones "Ver todo".
+- Tarjetas con aparición progresiva (`IntersectionObserver`).
 
 ### Explorar
-- Filtros por **categoría**, **género**, **sistema operativo** y **año** (píldoras).
-- Acordeón de filtros (un criterio abierto a la vez).
-- Ordenamiento: *Más recientes*, *Más populares*, *A-Z*.
-- Paginación: 12 juegos por página, con ventana de páginas y elipses.
-- Contador de resultados y botón "Limpiar filtros" (habilitado/deshabilitado según estado).
-- Panel **Herramientas** con enlaces externos.
+- Filtros por **categoría**, **género**, **sistema operativo** y **año** (píldoras), con acordeón.
+- Ordenamiento: *Más recientes / Más populares / A-Z*.
+- Paginación (12 por página), contador y "Limpiar filtros".
+- Panel de **Herramientas** con enlaces externos.
 
-### Herramientas
-- 5 herramientas con URL oficial, abiertas en pestaña nueva: `target="_blank"` y `rel="noopener noreferrer"`.
+### Tarjetas de juego (Home y Explorar)
+- Cada tarjeta muestra portada, título, meta (categoría · año / subtítulo) y un **chip con el tamaño real** (`specs.tamano`) sobre la portada, visible sin abrir la ficha.
 
-| Herramienta | URL |
-| --- | --- |
-| WinRAR | `https://winrar.es/descargas` |
-| UltraISO | `https://ultraiso.es.download.it/` |
-| DAEMON Tools | `https://www.daemon-tools.cc/spa/downloads` |
-| qBittorrent | `https://www.qbittorrent.org/` |
-| µTorrent | `https://www.utorrent.com/intl/es/downloads/win/` |
-
-### Ventana individual del juego (overlay)
-- Se abre al hacer clic en una tarjeta (Home o Explorar), vía `App.openGame(id)` → `NOXIS.Game.open(id)`.
-- Marco tipo ventana de escritorio: barra superior con tres puntos (rojo/amarillo/verde) y título `NOXIS / <título>`.
-- Portada 2:3, kicker (categoría · género), título, pills (año, plataformas, rating).
-- Botones **Descargar** (primario) y **Comprar** (secundario), apilados.
-- Descripción provisional derivada de los datos.
-- Pestañas *Información / Requisitos / Galería* (solo *Información* muestra datos reales).
-- Cierre: punto rojo, clic en el fondo, o tecla `Escape`.
-- Fondo atenuado con blur; bloqueo de scroll del fondo (`body.no-scroll`).
+### Ventana del juego (overlay)
+- Portada 2:3, kicker, título, pills (año, plataformas, rating).
+- **Descripción real** (campo `description`; fallback derivado si falta).
+- Pestañas:
+  - **Información**: ficha técnica (`specs`: plataforma, género, año, idiomas, tamaño, formato).
+  - **Requisitos**: bloques *Mínimos* / *Recomendados* (`requirements.min` / `req`).
+  - **Galería**: carrusel horizontal con imágenes reales (`gallery` + dots + prev/next).
+- Botones **Descargar** (abre `links.download`) y **Comprar** (abre `links.purchase`) en pestaña nueva. Si falta el link, el botón queda `disabled`.
+- Cierre por punto rojo, backdrop o `Escape`. Blur del fondo + bloqueo de scroll.
 
 ### Fuente de datos
-- `NOXIS.Data` con 30 juegos y 5 herramientas en memoria.
-- API: `getAllGames`, `getSectionGames`, `getSections`, `searchGames`, `getFacets`, `getTools`, `filterGames`.
+- `NOXIS.Data` con **5 juegos reales** y 5 herramientas.
+- Estructura rica por juego: `description`, `requirements`, `specs`, `links`, `gallery` (ver [ARCHITECTURE.md](ARCHITECTURE.md#estructura-de-un-juego)).
+- API: `init`, `getAllGames`, `getSectionGames`, `getSections`, `searchGames`, `getFacets`, `getTools`, `filterGames`.
+
+### Analítica y ranking (backend)
+- **`NOXIS.Analytics`** (`js/analytics.js`): envía eventos anónimos `open`/`download`/`purchase` al Worker vía `sendBeacon`; inactivo en local (`file:`/`localhost`).
+- **Worker `noxis-rank`** (Cloudflare + KV `NOXIS_EVENTS`): endpoints `POST /event` y `GET /popular`.
+- **Popularidad dinámica**: `NOXIS.Data.init()` lee `/popular` y reordena "Más populares" y el orden "populares" de Explorar; fallback al campo estático `popular`.
+- **Analítica de tráfico**: Cloudflare Web Analytics (visitas/páginas/referrers) en el dashboard.
+
+### Despliegue
+- Sitio: GitHub → Cloudflare Workers (**deploy automático al push a `main`**).
+- Worker: deploy manual con `wrangler` (ver [DEPLOY.md](DEPLOY.md)).
 
 ---
 
 ## En progreso
 
-- Consolidación de la ventana del juego (cierre por punto rojo y botón "Comprar" recién añadidos; pendiente validación visual fina).
+- Observación de la analítica de tráfico y ajuste de los pesos del score (`open=1, download=5, purchase=2`, media vida 30 días).
+- Limpieza de assets huérfanos (ver deuda técnica).
 
----
+## Pendientes / próximos pasos
 
-## Pendiente / no implementado (estructura preparada)
-
-- **Descargas reales**: el botón *Descargar* no realiza ninguna acción.
-- **Compra real**: el botón *Comprar* es visual únicamente.
-- **Requisitos de sistema**: pestaña *Requisitos* muestra un placeholder.
-- **Galería**: pestaña *Galería* muestra un placeholder.
-- **Verificador de hardware/compatibilidad**: no existe.
-- **Autenticación / perfiles de usuario**: el slot de cuenta está deshabilitado.
-- **Firebase** (Firestore, Storage, Hosting, Auth): no implementado; ver [ARCHITECTURE.md](ARCHITECTURE.md#futura-migración-a-firebase).
-- **Catálogo basado en carpetas**: no implementado (ver nota en ARCHITECTURE/ROADMAP).
-- **Datos reales de descripción**: la descripción se deriva temporalmente de los campos existentes.
+- Reemplazar/completar descripciones y fichas técnicas con contenido definitivo donde falte.
+- Agregar un **favicon** (hoy hay un 404 inofensivo de `favicon.ico`).
+- Limpiar los SVG de portada huérfanos (`assets/images/cover-*.svg`) de la etapa de datos ficticios.
+- Migración a Firebase (Firestore/Storage/Auth) — ver [ARCHITECTURE.md](ARCHITECTURE.md#futura-migración-a-firebase-intención-arquitectónica).
 
 ---
 
 ## Known Limitations
 
-Limitaciones reales identificadas durante la inspección del código.
+Limitaciones reales detectadas en el código.
 
 **Visuales**
-- No hay imágenes raster reales; las portadas son SVGs locales de prueba.
-- La descripción de cada juego es provisional (se deriva de los campos, no es contenido definitivo).
+- Las portadas y galerías son imágenes reales (`.jpg`/`.webp`) por juego; no hay arte definitivo optimizado.
+- No hay favicon declarado (404 en consola).
 
 **Funcionales**
-- "Descargar" y "Comprar" no realizan ninguna acción real.
-- "Requisitos" y "Galería" son placeholders ("próximamente").
+- "Descargar" y "Comprar" abren **enlaces externos** (`links.*`); no hay descarga propia ni pago.
+- "Requisitos" y "Galería" funcionan solo si el juego trae `requirements`/`gallery`; si no, muestran "próximamente".
 - La cuenta del header está deshabilitada (sin autenticación).
-- El buscador solo reordena la sección "Destacados"; no abre una vista de resultados dedicada.
+- El buscador solo reordena la sección "Destacados".
 
 **Arquitectónicas**
-- `App.views.game` apunta a `#view-game`, pero el juego no es una vista del router (es overlay); `showRoute` oculta vistas `main`, así que `#view-game` no se ve afectado por el router.
+- `App.views.game` apunta a `#view-game`, pero el juego es un **overlay** (no una vista del router).
 - `PER_PAGE = 12` hardcodeado en `explore.js`.
 - Fuga menor del listener de `Escape` en `game.js` (ver deuda técnica).
+- El Worker `noxis` (antiguo, `noxis.nicolabarranco2.workers.dev`) sigue existiendo pero **no se usa**.
 
-**Placeholders / datos temporales**
-- 30 juegos ficticios en `data.js`.
-- Estructuras `requirements`/`gallery` aún sin reflejar en la fuente de datos.
-
-**Funcionalidades futuras (NO implementadas)**
-- Firebase (Firestore/Storage/Hosting/Auth).
-- Catálogo basado en carpetas.
-- Descargas, requisitos, galería, verificador de compatibilidad.
+**Datos temporales**
+- 5 juegos reales cargados desde `Contenedor de juegos/`.
+- Los `assets/images/cover-*.svg` (30) son huérfanos: ya no los referencia `data.js`.
 
 ---
 
@@ -108,26 +99,28 @@ Limitaciones reales identificadas durante la inspección del código.
 
 - La estructura general de la ventana del juego (diseño consolidado).
 - El tamaño 2:3 de las portadas.
-- La paleta/tipografía definidas en `global.css`.
+- La paleta/tipografía de `global.css`.
 - El router y el flujo de apertura/cierre de la ventana.
 - La capa `NOXIS.Data` (no duplicar fuentes de datos).
+- Los pesos del score y la lógica de dedupe del Worker (afectan al ranking en vivo).
 
 ---
 
 ## Deuda técnica / riesgos conocidos
 
-1. **Código muerto en `home.css`**: reglas `.game__*`, `.explore__placeholder` y `.explore, .game` (min-height) corresponden al enfoque anterior de "vista de juego placeholder", reemplazado por el overlay. No son dañinas pero deben limpiarse.
-2. **Listener de `Escape` en `game.js`**: se añade en cada `open()` vía `document.addEventListener`, y solo se desregistra cuando se pulsa `Escape`. Si la ventana se cierra con el punto rojo o el backdrop, el listener permanece hasta el próximo `Escape`. Riesgo menor de fugas de listeners y de doble ejecución en aperturas repetidas.
-3. **`App.views.game`** sigue definido apuntando a `#view-game`, aunque el juego ya no es una vista del router (es overlay). Inofensivo, pero puede confundir.
-4. **`table` de `bindEvents(game)`**: el parámetro `game` no se utiliza dentro de `bindEvents`.
-5. **Paginación**: `PER_PAGE = 12` está hardcodeado en `explore.js`.
-6. **Datos ficticios**: los juegos son de prueba; las URLs de imágenes son SVG locales.
+1. **Assets huérfanos**: 30 `assets/images/cover-*.svg` de la etapa de datos ficticios, ya no referenciados.
+2. **Sin favicon**: 404 de `favicon.ico` en la consola del navegador.
+3. **Listener de `Escape` en `game.js`**: se añade en cada `open()` y solo se desregistra al cerrar con `Escape`; cerrar con el punto rojo o el backdrop lo deja registrado (riesgo menor de acumulación).
+4. **`App.views.game`**: apunta a `#view-game` aunque no sea una vista del router (confuso, inofensivo).
+5. **`PER_PAGE = 12`** hardcodeado en `explore.js`.
+6. **`WORKER_URL` duplicado**: el endpoint está como constante en `js/analytics.js`; si cambia el nombre del Worker, actualizarlo allí.
+7. **Worker `noxis` huérfano** en la cuenta de Cloudflare.
 
 ---
 
-## Próximos pasos sugeridos
+## Checklist de "estado sano"
 
-1. Limpiar código muerto en `home.css`.
-2. Corregir la fuga del listener `Escape` en `game.js` (guardar y desregistrar la referencia al cerrar).
-3. Completar datos reales de descripción y requisitos en `data.js`.
-4. Definir el modelo de datos para migrar a Firebase manteniendo `NOXIS.Data` como única capa de acceso (ver [ARCHITECTURE.md](ARCHITECTURE.md)).
+- [ ] `node --check` pasa en `js/data.js`, `app.js`, `home.js`, `explore.js`, `game.js`, `analytics.js`.
+- [ ] El sitio en vivo carga y la consola no tiene errores (salvo el 404 de favicon).
+- [ ] `GET https://noxis-rank.nicolabarranco2.workers.dev/popular` responde JSON.
+- [ ] Un clic en una tarjeta genera `POST /event` (visible en DevTools → Network).

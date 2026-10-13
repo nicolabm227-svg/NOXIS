@@ -234,6 +234,7 @@
         <a href="#" class="game-card" data-game-id="${game.id}" aria-label="Abrir ${game.title}">
           <div class="game-card__cover">
             <img class="game-card__img" src="${game.cover}" alt="Portada de ${game.title}" loading="lazy" />
+            ${game.specs && game.specs.tamano ? `<span class="game-card__size">${game.specs.tamano}</span>` : ""}
             <div class="game-card__body">
               <span class="game-card__meta">${game.category}</span>
               <h3 class="game-card__title">${game.title}</h3>

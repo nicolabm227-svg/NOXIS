@@ -6,4 +6,4 @@ compatibility_date = "2024-11-01"
 # (Workers & Pages -> KV -> Create namespace -> copiar el ID).
 [[kv_namespaces]]
 binding = "NOXIS_EVENTS"
-id = "<KV_ID>"
+id = "d41ce0b8a6894be9a5cafa4042a3cd54"

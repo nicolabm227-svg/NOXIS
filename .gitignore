@@ -12,6 +12,10 @@ desktop.ini
 # Contenedor de juegos (NO publicar: archivos pesados / con posible copyright)
 Contenedor de juegos/
 
+# Cloudflare Wrangler (estado local)
+.wrangler/
+worker/.wrangler/
+
 # Temporales y logs
 *.tmp
 *.log

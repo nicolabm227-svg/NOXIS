@@ -388,6 +388,30 @@
   text-shadow: 0 1px 6px rgba(0, 0, 0, 0.6);
 }
 
+/* Chip con el tamaño real del juego, sobre la portada (Home y Explorar).
+   Aporta un dato extra en la vista previa sin necesidad de abrir la ficha. */
+.game-card__size {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 2;
+  padding: 3px 9px;
+  font-family: var(--font-body);
+  font-size: 0.68rem;
+  font-weight: 600;
+  line-height: 1.4;
+  letter-spacing: 0.01em;
+  color: var(--text);
+  background: rgba(8, 10, 16, 0.66);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-pill);
+  box-shadow: var(--shadow-sm);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  pointer-events: none;
+  white-space: nowrap;
+}
+
 /* Aparición progresiva de tarjetas */
 .game-card {
   opacity: 0;
@@ -473,4 +497,5 @@
   .cards-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
   .game-card__body { padding: 12px; }
   .game-card__title { font-size: 0.9rem; }
+  .game-card__size { top: 8px; right: 8px; font-size: 0.64rem; padding: 2px 7px; }
 }
