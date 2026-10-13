@@ -260,6 +260,59 @@
         "assets/images/games/rise-of-nations-extended-edition/complementaria-4.jpg",
       ],
     },
+    /* ── Juego real (cargado manualmente desde "Contenedor de juegos") ── */
+    {
+      id: "diablo-ii-resurrected",
+      title: "Diablo II: Resurrected — Infernal Edition",
+      category: "Acción",
+      genre: "RPG de acción",
+      os: ["Windows"],
+      year: 2021,
+      popular: 88,
+      rating: 8.5,
+      featured: true,
+      sub: "RPG de acción · 2021",
+      cover: "assets/images/games/diablo-ii-resurrected/portada.jpg",
+      description:
+        "Descendé a un mundo consumido por la oscuridad en Diablo II: Resurrected, la versión remasterizada del legendario RPG de acción de Blizzard. Recorré tierras corrompidas, explorá mazmorras infestadas de demonios y enfrentate a las fuerzas del Infierno mientras perseguís al mismísimo Diablo. Elegí tu clase, dominá habilidades devastadoras y conseguí equipo cada vez más poderoso en una lucha donde cada expedición puede esconder una nueva recompensa… o una muerte segura.",
+      requirements: {
+        min: {
+          os: "Windows 10 (64 bits)",
+          cpu: "Intel Core i3-3250 o AMD FX-4350",
+          ram: "8 GB",
+          gpu: "Nvidia GTX 660 o AMD Radeon HD 7850",
+          storage: "30 GB",
+          notes: "Resolución: 1280 x 720",
+        },
+        rec: {
+          os: "Windows 10 (64 bits)",
+          cpu: "Intel Core i5-9600K o AMD Ryzen 5 2600",
+          ram: "16 GB",
+          gpu: "Nvidia GTX 1060 o AMD Radeon RX 5500 XT",
+          storage: "30 GB",
+          notes: "Resolución: 1280 x 720",
+        },
+      },
+      specs: {
+        plataforma: "PC",
+        idiomaTextos: "Español (MX/ES), Inglés, Francés, Italiano, Portugués (Brasil)",
+        idiomaVoces: "Español, Inglés, Francés, Alemán",
+        anio: "2021",
+        tamano: "31.5 GB",
+        formato: "ISO",
+        genero: "Aventura, Rol",
+      },
+      links: {
+        download: "https://www.mediafire.com/file/jxsved7fo6rd6y1/Diablo_II_Resurrected_Infernal_Edition.torrent/file",
+        purchase: "https://store.steampowered.com/app/2536520/Diablo_II_Resurrected__Infernal_Edition/",
+      },
+      gallery: [
+        "assets/images/games/diablo-ii-resurrected/complementaria-1.jpg",
+        "assets/images/games/diablo-ii-resurrected/complementaria-2.png",
+        "assets/images/games/diablo-ii-resurrected/complementaria-3.png",
+        "assets/images/games/diablo-ii-resurrected/complementaria-4.webp",
+      ],
+    },
   ];
 
   /* Herramientas del bloque lateral (presentación compacta).

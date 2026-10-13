@@ -76,7 +76,7 @@ Este documento describe la arquitectura técnica real del proyecto. Es más téc
 
 Módulo `data.js` que encierra en memoria:
 
-- `games`: array de **5 juegos reales**.
+- `games`: array de **6 juegos reales**.
 - `tools`: array de 5 herramientas con URL externa.
 - `sections`: configuración de las 3 secciones de la Home (función `select` sobre `games`).
 - `popularity`: mapa `{ gameId: score }` cargado del backend (o `null` si no se cargó).

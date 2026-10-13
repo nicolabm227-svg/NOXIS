@@ -22,7 +22,7 @@ Estado real: es front-end **más un backend mínimo y opcional** para el ranking
   5. `explore.js` → **`NOXIS.Explore`** (filtros/paginación) + encadena `RouterHooks`.
   6. `game.js` → **`NOXIS.Game`** (ventana overlay del juego).
 - CSS: `global.css` (tokens), `components.css` (header/tarjetas/loader), `home.css`, `explore.css`, `game.css`.
-- Datos: `js/data.js` contiene arrays `games` (**5 juegos reales**) y `tools` (5), en memoria.
+- Datos: `js/data.js` contiene arrays `games` (**6 juegos reales**) y `tools` (5), en memoria.
 - Backend: `worker/index.js` (Cloudflare Worker) + KV `NOXIS_EVENTS`. Endpoints `POST /event` y `GET /popular`.
 
 ## 3. REGLAS FUNDAMENTALES

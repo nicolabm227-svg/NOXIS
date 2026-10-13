@@ -13,10 +13,11 @@ Registro del estado conocido y la evolución del proyecto. No se dispone de fech
 - **Herramientas**: enlaces externos (WinRAR, UltraISO, DAEMON Tools, qBittorrent, µTorrent) en pestaña nueva con `rel="noopener noreferrer"`.
 - **Ventana del juego (overlay)**: marco tipo ventana de escritorio, tres puntos de control, portada 2:3, descripción real, pestañas (Información/Requisitos/Galería), botones Descargar y Comprar que abren enlaces externos.
 - **Analítica + ranking**: `NOXIS.Analytics` envía eventos al Worker; `NOXIS.Data.init()` reordena por popularidad real (con fallback estático). Tráfico medido con Cloudflare Web Analytics.
-- **Datos**: `NOXIS.Data` con 5 juegos reales (descripción, requisitos, ficha técnica, enlaces y galería) y 5 herramientas.
+- **Datos**: `NOXIS.Data` con 6 juegos reales (descripción, requisitos, ficha técnica, enlaces y galería) y 5 herramientas.
 
 ### Cambios recientes
 
+- **Nuevo juego**: **Diablo II: Resurrected — Infernal Edition** (PC, 2021) agregado al catálogo (assets en `assets/images/games/diablo-ii-resurrected/` + objeto en `js/data.js`).
 - **Favicon**: se declaran `assets/images/favicon-32.png` y `assets/images/apple-touch-icon.png`, más `theme-color` y `color-scheme: dark`. Se elimina el 404 de `favicon.ico`.
 - **Fix visual de las tarjetas**: la portada escalada + `filter` se recortaba mal en las esquinas redondeadas y dejaba un borde irregular (visible sobre todo en hover). Ahora la portada y su `.game-card__cover` se recortan de forma robusta (`isolation`, `border-radius` propio, `translateZ(0)`, `backface-visibility`); el reveal/hover usa `translate3d` para conservar la capa promovida. El texto de la tarjeta queda perfectamente alineado.
 - **Home sin juegos repetidos**: `Data.getSections()` reparte los carriles (Destacados / Nuevos / Más populares) sin repetir títulos, adapta el tamaño por sección (máx. 8) y **omite las secciones vacías** (la vista las oculta).

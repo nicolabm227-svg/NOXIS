@@ -60,7 +60,7 @@ for f in js/*.js; do node --check "$f"; done && echo "JS OK"
 
 ## Verificar recursos
 
-Revisar que todos los recursos referenciados existan (CSS, JS, imágenes). Las portadas y galerías de los 5 juegos están en `assets/images/games/<id>/` (`portada.jpg`, `complementaria-N.jpg`). Cargá `index.html` en el navegador y verificá la consola (sin 404, salvo el 404 conocido de `favicon.ico`).
+Revisar que todos los recursos referenciados existan (CSS, JS, imágenes). Las portadas y galerías de los 6 juegos están en `assets/images/games/<id>/` (`portada.jpg`, `complementaria-N.<ext>`; la extensión real puede ser `.jpg`, `.png` o `.webp`). Cargá `index.html` en el navegador y verificá la consola (sin errores ni 404).
 
 ## Probar la Home
 

@@ -44,7 +44,7 @@ Fotografía del proyecto en el momento de redactar este documento. El código es
 - **Foco gestionado**: se enfoca la ventana al abrir, el `Tab` queda atrapado dentro y el foco vuelve al elemento que la abrió al cerrar.
 
 ### Fuente de datos
-- `NOXIS.Data` con **5 juegos reales** y 5 herramientas.
+- `NOXIS.Data` con **6 juegos reales** y 5 herramientas.
 - Estructura rica por juego: `description`, `requirements`, `specs`, `links`, `gallery` (ver [ARCHITECTURE.md](ARCHITECTURE.md#estructura-de-un-juego)).
 - API: `init`, `getAllGames`, `getSectionGames`, `getSections`, `searchGames`, `getFacets`, `getTools`, `filterGames`.
 
@@ -92,7 +92,7 @@ Limitaciones reales detectadas en el código.
 - El Worker `noxis` (antiguo, `noxis.nicolabarranco2.workers.dev`) sigue existiendo pero **no se usa**.
 
 **Datos temporales**
-- 5 juegos reales cargados desde `Contenedor de juegos/`.
+- 6 juegos reales cargados desde `Contenedor de juegos/`.
 - Los `assets/images/cover-*.svg` (30) son huérfanos: ya no los referencia `data.js`.
 
 ---

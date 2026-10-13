@@ -59,7 +59,25 @@ Copiá y renombrá a `assets/images/games/<id>/`:
 Reglas de nombres **exactas** (las usa `data.js`):
 
 - Portada: **`portada.jpg`** (minúsculas; si el original es `.png`/`.webp`, convertí a `.jpg` o cambiá la ruta en `cover`).
-- Galería: **`complementaria-1.webp`**, `complementaria-2.webp`, … (guion, sin espacio, numeradas desde 1).
+- Galería: **`complementaria-1.<ext>`**, `complementaria-2.<ext>`, … (guion, sin espacio, numeradas desde 1).
+
+> **Extensiones reales**: a veces los archivos del contenedor están mal nombrados (p. ej. `Complementaria 2.jpg` que en realidad es un PNG o un WebP). La extensión **debe coincidir con el contenido** para que el `Content-Type` que sirve Cloudflare sea correcto. Para verificarlo, mirá los primeros bytes del archivo:
+>
+> | Primeros bytes | Formato real | Extensión |
+> | --- | --- | --- |
+> | `FF D8 FF` | JPEG | `.jpg` |
+> | `89 50 4E 47` | PNG | `.png` |
+> | `52 49 46 46 ... 57 45 42 50` (`RIFF`…`WEBP`) | WebP | `.webp` |
+>
+> ```powershell
+> # Ver el "magic number" de cada imagen
+> Get-ChildItem "assets\images\games\<id>" -File | ForEach-Object {
+>   $b = [System.IO.File]::ReadAllBytes($_.FullName)
+>   "{0}: {1}" -f $_.Name, (($b[0..3] | ForEach-Object { $_.ToString('X2') }) -join ' ')
+> }
+> ```
+>
+> Si renombrás la extensión, actualizá la ruta correspondiente en `gallery` (o `cover`) de `data.js`.
 
 ```powershell
 # Ejemplo (PowerShell): id = red-dead-redemption-2
@@ -167,6 +185,7 @@ git push origin main
 | Síntoma | Causa probable |
 | --- | --- |
 | Imagen no carga (404) | Ruta o nombre de archivo mal escrito (`portada.jpg` vs `Portada.jpg`, extensión). |
+| Imagen no carga aunque la ruta existe | Extensión equivocada (archivo `.jpg` que en realidad es PNG/WebP). Ver §2. |
 | No aparece el chip de tamaño | Falta `specs.tamano`. |
 | Botón *Descargar* deshabilitado | Falta `links.download`. |
 | No sale en "Destacados" | Falta `featured: true`. |
