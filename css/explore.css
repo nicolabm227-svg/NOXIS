@@ -156,7 +156,6 @@
 }
 
 .accordion__head:focus-visible {
-  outline: none;
   color: var(--text);
 }
 
@@ -251,7 +250,6 @@
 }
 
 .filters__clear:focus-visible {
-  outline: none;
   color: var(--accent-soft);
 }
 

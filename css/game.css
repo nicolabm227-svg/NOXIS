@@ -85,12 +85,26 @@
 }
 
 /* Punto rojo: cierra la ventana. Amarillo/verde: por ahora solo visuales. */
-.game-window__dot--close     { background: rgba(248, 113, 113, 0.6); cursor: pointer; }
+.game-window__dot--close {
+  position: relative;
+  background: rgba(248, 113, 113, 0.6);
+  cursor: pointer;
+}
+
+/* Amplía el área táctil del cierre (~39px) sin agrandar el punto visual. */
+.game-window__dot--close::after {
+  content: "";
+  position: absolute;
+  inset: -14px;
+  border-radius: 50%;
+}
+
 .game-window__dot--minimize  { background: rgba(250, 204, 21, 0.55); }
 .game-window__dot--maximize  { background: rgba(52, 211, 153, 0.55); }
 
 .game-window__dot--close:hover,
 .game-window__dot--close:focus-visible {
+  outline: none;
   transform: scale(1.15);
   background: rgba(248, 113, 113, 0.9);
   box-shadow: 0 0 0 3px rgba(248, 113, 113, 0.18);

@@ -1,6 +1,7 @@
 /* ============================================================
    NOXIS — data.js
-   Fuente de datos local de prueba (Juegos ficticios).
+   Fuente de datos local (5 juegos reales cargados desde
+   "Contenedor de juegos" + 5 herramientas).
    IMPORTANTE: Esta capa es la única que consulta los datos.
    En el futuro, sustituir la implementación por datos de
    Firebase SIN tocar la interfaz (los módulos de vista leen
@@ -341,8 +342,22 @@
       return section ? section.select(games) : [];
     },
 
+    /* Carriles de la Home sin repetir juegos: cada sección aporta su
+       propia selección (destacados, más nuevos, más populares) y toma los
+       primeros que aún no aparecieron arriba. El tamaño por sección se
+       adapta al catálogo (máx. 8) para que todas tengan contenido aunque
+       la biblioteca sea chica, y se omiten las secciones vacías. */
     getSections() {
-      return sections.map((s) => ({ key: s.key, heading: s.heading, games: s.select(games) }));
+      const perSection = Math.min(8, Math.ceil(games.length / sections.length));
+      const used = new Set();
+      return sections
+        .map((s) => {
+          const pool = s.select(games).filter((g) => !used.has(g.id));
+          const chosen = perSection > 0 ? pool.slice(0, perSection) : [];
+          chosen.forEach((g) => used.add(g.id));
+          return { key: s.key, heading: s.heading, games: chosen };
+        })
+        .filter((s) => s.games.length > 0);
     },
 
     searchGames(query) {

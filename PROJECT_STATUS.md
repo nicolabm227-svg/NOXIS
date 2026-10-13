@@ -9,24 +9,28 @@ Fotografía del proyecto en el momento de redactar este documento. El código es
 ## Implementado
 
 ### Navegación / núcleo
-- Router propio en `app.js` con estado `{ route, selectedGameId }`.
+- Router propio en `app.js` con estado `{ route, selectedGameId, exploreSort }`.
 - Vistas: `home` (`#view-home`) y `explore` (`#view-explore`). Transición con backdrop y scroll suave.
 - Loader inicial con mínimo de presencia visual (450 ms).
-- Header sticky con marca (imagen `assets/images/logo.webp`), enlaces Inicio/Explorar, buscador global y slot de cuenta (deshabilitado).
+- Header sticky con marca (imagen `assets/images/logo.webp`), enlaces Inicio/Explorar, buscador global (**con sugerencias compartidas**) y slot de cuenta (deshabilitado).
+- Botón **"Volver arriba"** flotante (`#back-to-top`), visible tras 600 px de scroll.
+- **Accesibilidad**: foco de teclado visible (`:focus-visible`), navegación por Tab, `aria-*` en vistas/overlay, y áreas táctiles ≥44 px en punteros gruesos.
 
 ### Home
 - Tres secciones: *Destacados* (featured), *Nuevos* (más recientes), *Más populares* (orden por popularidad).
-- Buscador global y botones "Ver todo".
-- Tarjetas con aparición progresiva (`IntersectionObserver`).
+- **Sin juegos repetidos** entre secciones; las secciones vacías se ocultan.
+- Buscador global (reordena *Destacados*) y botones "Ver todo" que **heredan el orden** de su sección en Explorar.
+- Tarjetas con aparición progresiva y escalonada (`IntersectionObserver` + `--i`).
 
 ### Explorar
 - Filtros por **categoría**, **género**, **sistema operativo** y **año** (píldoras), con acordeón.
-- Ordenamiento: *Más recientes / Más populares / A-Z*.
-- Paginación (12 por página), contador y "Limpiar filtros".
+- Ordenamiento: *Más recientes / Más populares / A-Z* (y el heredado desde "Ver todo").
+- Paginación (12 por página), contador, "Limpiar filtros" y **estado vacío** cuando no hay coincidencias.
 - Panel de **Herramientas** con enlaces externos.
 
 ### Tarjetas de juego (Home y Explorar)
 - Cada tarjeta muestra portada, título, meta (categoría · año / subtítulo) y un **chip con el tamaño real** (`specs.tamano`) sobre la portada, visible sin abrir la ficha.
+- Portada 2:3 con **recorte robusto** en las esquinas redondeadas (sin bordes irregulares al hacer zoom en hover).
 
 ### Ventana del juego (overlay)
 - Portada 2:3, kicker, título, pills (año, plataformas, rating).
@@ -37,6 +41,7 @@ Fotografía del proyecto en el momento de redactar este documento. El código es
   - **Galería**: carrusel horizontal con imágenes reales (`gallery` + dots + prev/next).
 - Botones **Descargar** (abre `links.download`) y **Comprar** (abre `links.purchase`) en pestaña nueva. Si falta el link, el botón queda `disabled`.
 - Cierre por punto rojo, backdrop o `Escape`. Blur del fondo + bloqueo de scroll.
+- **Foco gestionado**: se enfoca la ventana al abrir, el `Tab` queda atrapado dentro y el foco vuelve al elemento que la abrió al cerrar.
 
 ### Fuente de datos
 - `NOXIS.Data` con **5 juegos reales** y 5 herramientas.
@@ -63,7 +68,6 @@ Fotografía del proyecto en el momento de redactar este documento. El código es
 ## Pendientes / próximos pasos
 
 - Reemplazar/completar descripciones y fichas técnicas con contenido definitivo donde falte.
-- Agregar un **favicon** (hoy hay un 404 inofensivo de `favicon.ico`).
 - Limpiar los SVG de portada huérfanos (`assets/images/cover-*.svg`) de la etapa de datos ficticios.
 - Migración a Firebase (Firestore/Storage/Auth) — ver [ARCHITECTURE.md](ARCHITECTURE.md#futura-migración-a-firebase-intención-arquitectónica).
 
@@ -75,7 +79,6 @@ Limitaciones reales detectadas en el código.
 
 **Visuales**
 - Las portadas y galerías son imágenes reales (`.jpg`/`.webp`) por juego; no hay arte definitivo optimizado.
-- No hay favicon declarado (404 en consola).
 
 **Funcionales**
 - "Descargar" y "Comprar" abren **enlaces externos** (`links.*`); no hay descarga propia ni pago.
@@ -86,7 +89,6 @@ Limitaciones reales detectadas en el código.
 **Arquitectónicas**
 - `App.views.game` apunta a `#view-game`, pero el juego es un **overlay** (no una vista del router).
 - `PER_PAGE = 12` hardcodeado en `explore.js`.
-- Fuga menor del listener de `Escape` en `game.js` (ver deuda técnica).
 - El Worker `noxis` (antiguo, `noxis.nicolabarranco2.workers.dev`) sigue existiendo pero **no se usa**.
 
 **Datos temporales**
@@ -109,18 +111,16 @@ Limitaciones reales detectadas en el código.
 ## Deuda técnica / riesgos conocidos
 
 1. **Assets huérfanos**: 30 `assets/images/cover-*.svg` de la etapa de datos ficticios, ya no referenciados.
-2. **Sin favicon**: 404 de `favicon.ico` en la consola del navegador.
-3. **Listener de `Escape` en `game.js`**: se añade en cada `open()` y solo se desregistra al cerrar con `Escape`; cerrar con el punto rojo o el backdrop lo deja registrado (riesgo menor de acumulación).
-4. **`App.views.game`**: apunta a `#view-game` aunque no sea una vista del router (confuso, inofensivo).
-5. **`PER_PAGE = 12`** hardcodeado en `explore.js`.
-6. **`WORKER_URL` duplicado**: el endpoint está como constante en `js/analytics.js`; si cambia el nombre del Worker, actualizarlo allí.
-7. **Worker `noxis` huérfano** en la cuenta de Cloudflare.
+2. **`App.views.game`**: apunta a `#view-game` aunque no sea una vista del router (confuso, inofensivo).
+3. **`PER_PAGE = 12`** hardcodeado en `explore.js`.
+4. **`WORKER_URL` duplicado**: el endpoint está como constante en `js/analytics.js`; si cambia el nombre del Worker, actualizarlo allí.
+5. **Worker `noxis` huérfano** en la cuenta de Cloudflare.
 
 ---
 
 ## Checklist de "estado sano"
 
 - [ ] `node --check` pasa en `js/data.js`, `app.js`, `home.js`, `explore.js`, `game.js`, `analytics.js`.
-- [ ] El sitio en vivo carga y la consola no tiene errores (salvo el 404 de favicon).
+- [ ] El sitio en vivo carga y la consola no tiene errores.
 - [ ] `GET https://noxis-rank.nicolabarranco2.workers.dev/popular` responde JSON.
 - [ ] Un clic en una tarjeta genera `POST /event` (visible en DevTools → Network).

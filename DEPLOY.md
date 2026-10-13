@@ -70,7 +70,7 @@ npx.cmd wrangler login --device
 Sitio:
 
 - Abrir `https://noxis-hub-app.nicolabarranco2.workers.dev/` y comprobar que carga el catálogo.
-- Consola del navegador sin errores. (Existe un 404 conocido del `favicon.ico`; es inofensivo.)
+- Consola del navegador sin errores.
 
 Worker:
 
@@ -100,9 +100,9 @@ curl -X POST https://noxis-rank.nicolabarranco2.workers.dev/event ^
 
 ## 7. Cache-busting
 
-El sitio referencia CSS/JS con `?v=N` (hoy `v=10`) para forzar la recarga en navegadores que tengan versiones viejas en caché.
+El sitio referencia CSS/JS con `?v=N` (hoy `v=23`) para forzar la recarga en navegadores que tengan versiones viejas en caché.
 
-- **Cada vez que cambies un `.css` o `.js`, subí el número** en `index.html` (`?v=11`, `?v=12`, …).
+- **Cada vez que cambies un `.css` o `.js`, subí el número** en `index.html` (`?v=24`, `?v=25`, …).
 - Si solo cambia `js/data.js` (agregar juegos), igual conviene subir la versión.
 
 ## 8. Entorno (Windows)

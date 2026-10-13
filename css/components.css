@@ -58,8 +58,8 @@
   z-index: 50;
   height: var(--nav-h);
   background: linear-gradient(180deg, rgba(5, 6, 10, 0.82), rgba(5, 6, 10, 0.62));
-  backdrop-filter: blur(18px) saturate(1.15);
-  -webkit-backdrop-filter: blur(18px) saturate(1.15);
+  backdrop-filter: blur(12px) saturate(1.1);
+  -webkit-backdrop-filter: blur(12px) saturate(1.1);
   border-bottom: 1px solid var(--line);
 }
 
@@ -294,6 +294,7 @@
   border: 1px solid var(--line);
   background: var(--surface);
   box-shadow: var(--shadow-card);
+  isolation: isolate;
   transform: translateZ(0);
   transition: transform var(--dur) var(--ease), box-shadow var(--dur) var(--ease),
               border-color var(--dur) var(--ease);
@@ -303,7 +304,7 @@
    Evita el estado "pegado" tras un tap en pantallas táctiles. */
 @media (hover: hover) {
   .game-card:hover {
-    transform: translateY(-3px);
+    transform: translate3d(0, -3px, 0);
     border-color: rgba(110, 168, 255, 0.28);
     box-shadow: 0 18px 40px rgba(0, 0, 0, 0.5),
                 0 0 0 1px rgba(110, 168, 255, 0.12);
@@ -314,22 +315,49 @@
   position: relative;
   aspect-ratio: 2 / 3;
   overflow: hidden;
+  border-radius: calc(var(--radius-md) - 1px);
   background: var(--bg-elev);
+  transform: translateZ(0);
+}
+
+/* Esqueleto de carga: se muestra hasta que la portada pinta encima. */
+.game-card__cover::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: linear-gradient(
+    100deg,
+    rgba(255, 255, 255, 0) 22%,
+    rgba(255, 255, 255, 0.045) 42%,
+    rgba(255, 255, 255, 0) 62%
+  );
+  background-size: 220% 100%;
+  animation: cover-shimmer 1.5s linear infinite;
+}
+
+@keyframes cover-shimmer {
+  to { background-position: -220% 0; }
 }
 
 .game-card__img {
+  position: relative;
+  z-index: 1;
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transform: scale(1.015);
+  border-radius: inherit;
+  transform: scale(1.015) translateZ(0);
+  transform-origin: center;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
   filter: saturate(0.94) contrast(1.02);
   transition: transform 0.5s var(--ease), filter 0.34s var(--ease);
-  will-change: transform;
 }
 
 @media (hover: hover) {
   .game-card:hover .game-card__img {
-    transform: scale(1.035);
+    transform: scale(1.035) translateZ(0);
     filter: saturate(0.94) contrast(1.02) brightness(1.04);
   }
 }
@@ -339,6 +367,7 @@
 .game-card__body {
   position: absolute;
   inset: 0;
+  z-index: 2;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
@@ -399,7 +428,7 @@
   position: absolute;
   top: 10px;
   right: 10px;
-  z-index: 2;
+  z-index: 3;
   padding: 3px 9px;
   font-family: var(--font-body);
   font-size: 0.68rem;
@@ -411,8 +440,6 @@
   border: 1px solid var(--line-strong);
   border-radius: var(--radius-pill);
   box-shadow: var(--shadow-sm);
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
   pointer-events: none;
   white-space: nowrap;
 }
@@ -420,18 +447,21 @@
 /* Aparición progresiva de tarjetas */
 .game-card {
   opacity: 0;
-  transform: translateY(14px);
+  transform: translate3d(0, 14px, 0);
 }
 
 .game-card.is-visible {
   opacity: 1;
-  transform: translateY(0);
+  transform: translate3d(0, 0, 0);
   transition: opacity 0.55s var(--ease), transform 0.55s var(--ease),
               box-shadow var(--dur) var(--ease), border-color var(--dur) var(--ease);
+  /* Aparición escalonada según la posición de la tarjeta en su fila. */
+  transition-delay: calc(var(--i, 0) * 45ms);
 }
 @media (hover: hover) {
   .game-card.is-visible:hover {
-    transform: translateY(-3px);
+    transform: translate3d(0, -3px, 0);
+    transition-delay: 0s;
   }
 }
 
@@ -449,6 +479,41 @@
 .backdrop.is-visible {
   opacity: 1;
   pointer-events: auto;
+}
+
+/* ---------- Volver arriba ---------- */
+.back-to-top {
+  position: fixed;
+  right: clamp(16px, 3vw, 28px);
+  bottom: clamp(16px, 3vw, 28px);
+  z-index: 80;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 1px solid var(--line-strong);
+  background: rgba(11, 13, 18, 0.86);
+  color: var(--text-dim);
+  box-shadow: var(--shadow-md);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  opacity: 0;
+  transform: translateY(12px);
+  pointer-events: none;
+  transition: opacity var(--dur) var(--ease), transform var(--dur) var(--ease),
+              color var(--dur) var(--ease), border-color var(--dur) var(--ease);
+}
+
+.back-to-top.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.back-to-top:hover {
+  color: var(--text);
+  border-color: rgba(110, 168, 255, 0.4);
 }
 
 /* ---------- Responsive ---------- */

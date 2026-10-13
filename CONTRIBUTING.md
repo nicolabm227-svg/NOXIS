@@ -25,8 +25,8 @@ Filosofía, convenciones y reglas para contribuir sin romper el proyecto.
 13. **Respetá el despliegue**: el sitio se publica solo con `git push`; el **Worker se despliega a mano** con `wrangler` (ver [DEPLOY.md](DEPLOY.md)).
 14. **Si tocás CSS/JS, subí `?v=N`** en `index.html` (cache-busting).
 15. **No commitees `Contenedor de juegos/`** (está en `.gitignore`; material crudo con posible copyright).
-13. **Actualizá la documentación** cuando cambie la arquitectura o el comportamiento.
-14. **No rediseñes componentes existentes** sin instrucción explícita (portada 2:3, paleta, layout de la ventana).
+16. **Actualizá la documentación** cuando cambie la arquitectura o el comportamiento.
+17. **No rediseñes componentes existentes** sin instrucción explícita (portada 2:3, paleta, layout de la ventana).
 
 ## Estructura y convenciones
 
@@ -50,11 +50,13 @@ Filosofía, convenciones y reglas para contribuir sin romper el proyecto.
 
 ## Cómo agregar un juego
 
+Guía completa paso a paso en **[AGREGAR-JUEGO.md](AGREGAR-JUEGO.md)**. Resumen:
+
 1. Poné el material crudo en `Contenedor de juegos/<Nombre>/` (gitignored).
-2. Copiá la portada a `assets/images/games/<id>/portada.jpg` y la galería a `assets/images/games/<id>/complementaria-N.jpg`.
+2. Copiá la portada a `assets/images/games/<id>/portada.jpg` y la galería a `assets/images/games/<id>/complementaria-N.webp` (nombres renombrados y exactos).
 3. Agregá un objeto al array `games` de `js/data.js` con la estructura documentada en [ARCHITECTURE.md](ARCHITECTURE.md#estructura-de-un-juego).
-3. `node --check js/data.js`.
-4. Subí `?v=N` en `index.html` y hacé `git push` (se publica solo).
+4. `node --check js/data.js`.
+5. Subí `?v=N` en `index.html` y hacé `git push` (se publica solo).
 
 No toques los módulos de vista: facetas, secciones y ficha se generan a partir de los datos.
 
@@ -87,7 +89,7 @@ No toques los módulos de vista: facetas, secciones y ficha se generan a partir 
 ## Checklist antes de enviar un cambio
 
 - [ ] `node --check` en los JS modificados.
-- [ ] Sin errores ni 404 en consola (salvo el 404 conocido de `favicon.ico`).
+- [ ] Sin errores ni 404 en consola.
 - [ ] Flujos probados (Home, Explorar, ventana del juego).
 - [ ] Responsive verificado.
 - [ ] Si cambió CSS/JS: subido `?v=N` en `index.html`.

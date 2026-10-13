@@ -198,8 +198,9 @@
   margin-bottom: 28px;
 }
 
-/* ---------- Transición de vistas ---------- */
-.is-visible {
+/* ---------- Transición de vistas (solo las vistas, no las tarjetas) ---------- */
+.home.is-visible,
+.explore.is-visible {
   animation: rise-in 0.5s var(--ease) both;
 }
 

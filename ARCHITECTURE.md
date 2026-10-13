@@ -96,6 +96,8 @@ API pública:
 
 El orden "popular" usa `comparePopular`: ordena por `popularity[gameId]` (score dinámico) con desempate por el campo estático `popular`; si no hay datos, usa solo el campo estático.
 
+`getSections()` arma los **carriles de la Home sin repetir juegos**: cada sección aporta su propia selección (destacados / más nuevos / más populares) y toma los primeros que aún no aparecieron arriba. El tamaño por sección se adapta al catálogo (máx. 8) para que todas tengan contenido aunque la biblioteca sea chica, y las secciones vacías se omiten (la vista las oculta).
+
 ## Renderizado
 
 - **Tarjetas**: `home.js` y `explore.js` comparten el mismo markup (`<a class="game-card" data-game-id="...">`). Estilos en `components.css`.
@@ -160,12 +162,17 @@ Campos y su uso:
 
 ### Cómo agregar un juego
 
+Guía paso a paso completa en **[AGREGAR-JUEGO.md](AGREGAR-JUEGO.md)**. Resumen:
+
 1. Poné el material crudo en `Contenedor de juegos/<Nombre>/` (portada, complementarias, `.torrent`, `informacion.txt`). Esa carpeta está **gitignored**.
-2. Copiá la portada a `assets/images/games/<id>/portada.jpg` y las imágenes de galería a `assets/images/games/<id>/complementaria-N.jpg`.
-3. Agregá un objeto al array `games` de `js/data.js` con la estructura de arriba.
-4. `node --check js/data.js` y `git push` (se publica solo). Subí `?v=N`.
+2. Copiá la portada a `assets/images/games/<id>/portada.jpg` y las imágenes de galería a `assets/images/games/<id>/complementaria-N.webp` (nombres exactos, renombrados desde `Portada`/`Complementaria N`).
+3. Extraé requisitos, ficha técnica (`specs`), descripción y enlaces del `informacion.txt`.
+4. Agregá un objeto al array `games` de `js/data.js` con la estructura de arriba.
+5. `node --check js/data.js`, subí `?v=N` en `index.html` y `git push` (se publica solo).
 
 No hace falta tocar los módulos de vista: las facetas, las secciones y la ficha se generan a partir de los datos.
+
+> El material crudo y lo publicado deben quedar **1:1**: cada `<id>` en `assets/images/games/` corresponde a un objeto en `games` y viceversa.
 
 ### Facetas
 

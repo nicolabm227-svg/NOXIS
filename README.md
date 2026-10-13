@@ -29,9 +29,9 @@ Además del front, cuenta con un **backend mínimo** (un Cloudflare Worker + KV)
 
 El proyecto está **publicado y en producción**:
 
-- **Implementado**: navegación, catálogo, filtros, ventana del juego completa, herramientas, analítica y ranking por interacciones, despliegue en Cloudflare.
+- **Implementado**: navegación, catálogo, filtros, ventana del juego completa, herramientas, accesibilidad (foco/teclado, "volver arriba"), analítica y ranking por interacciones, despliegue en Cloudflare.
 - **En progreso**: observación de analítica, ajuste de pesos del ranking y limpieza de assets huérfanos.
-- **Pendiente**: contenido definitivo donde falte, favicon, migración a Firebase.
+- **Pendiente**: contenido definitivo donde falte, migración a Firebase.
 
 Para el detalle completo, ver [PROJECT_STATUS.md](PROJECT_STATUS.md).
 
@@ -42,6 +42,7 @@ Para el detalle completo, ver [PROJECT_STATUS.md](PROJECT_STATUS.md).
 | Documento | Contenido |
 | --- | --- |
 | [ARCHITECTURE.md](ARCHITECTURE.md) | Arquitectura técnica, capas, flujo de datos, Worker y router. |
+| [AGREGAR-JUEGO.md](AGREGAR-JUEGO.md) | Flujo paso a paso para cargar un juego nuevo al catálogo. |
 | [DEPLOY.md](DEPLOY.md) | Despliegue y operación en Cloudflare (sitio, Worker, KV, analítica). |
 | [DESIGN_SYSTEM.md](DESIGN_SYSTEM.md) | Identidad visual y "NOXIS Design System". |
 | [DEVELOPMENT.md](DEVELOPMENT.md) | Cómo ejecutar, probar y verificar el proyecto. |

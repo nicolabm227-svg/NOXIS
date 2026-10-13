@@ -17,6 +17,17 @@ Registro del estado conocido y la evolución del proyecto. No se dispone de fech
 
 ### Cambios recientes
 
+- **Favicon**: se declaran `assets/images/favicon-32.png` y `assets/images/apple-touch-icon.png`, más `theme-color` y `color-scheme: dark`. Se elimina el 404 de `favicon.ico`.
+- **Fix visual de las tarjetas**: la portada escalada + `filter` se recortaba mal en las esquinas redondeadas y dejaba un borde irregular (visible sobre todo en hover). Ahora la portada y su `.game-card__cover` se recortan de forma robusta (`isolation`, `border-radius` propio, `translateZ(0)`, `backface-visibility`); el reveal/hover usa `translate3d` para conservar la capa promovida. El texto de la tarjeta queda perfectamente alineado.
+- **Home sin juegos repetidos**: `Data.getSections()` reparte los carriles (Destacados / Nuevos / Más populares) sin repetir títulos, adapta el tamaño por sección (máx. 8) y **omite las secciones vacías** (la vista las oculta).
+- **"Ver todo" con contexto**: cada botón de sección navega a Explorar heredando el orden de esa sección (`featured`/`popular` → populares, `new` → recientes).
+- **Buscador unificado**: las sugerencias (`#global-search` / `#search-suggest`) se movieron de `home.js` a `app.js` y son compartidas por Home y Explorar. Salir del buscador (Escape, clic afuera o elegir una sugerencia) limpia el input y **restaura** la vista.
+- **Botón "Volver arriba"**: botón flotante (`#back-to-top`) que aparece tras 600 px de scroll.
+- **Accesibilidad**: foco de teclado visible y consistente (`:focus-visible`); la ventana del juego atrapa el foco (Tab), enfoca al abrir y **devuelve el foco** al cerrar; el punto de cierre es un `<button>` real y la ventana usa `aria-labelledby`. Se corrige la fuga del listener de `Escape` (antes solo se desregistraba al cerrar con Esc).
+- **Áreas táctiles**: en dispositivos de puntero grueso, los interactivos (enlaces, píldoras, paginación, galería, botones) alcanzan ≥44 px.
+- **Rendimiento**: los halos de fondo del `body` pasan a una capa fija (`body::before`) en vez de `background-attachment: fixed`; se quita `will-change` de la portada y se agrega `decoding="async"` a las imágenes.
+- **Detalles de UI**: aparición escalonada de tarjetas (`--i`) y estado vacío en Explorar ("No se encontraron juegos con esos filtros").
+- **Documentación**: nuevo **[AGREGAR-JUEGO.md](AGREGAR-JUEGO.md)** con el flujo paso a paso para cargar un juego; `DEPLOY.md` advierte que el hosting es **Cloudflare Workers** (no GitHub Pages).
 - **Logo de marca**: el header usa `assets/images/logo.webp` (generado desde `Logo1.png`, recortado y con el fondo crema eliminado). Se muestra **cuadrado y llenando** el espacio del logo (`object-fit: cover`) con esquinas redondeadas (`--radius-sm`), sin caja, borde ni fondo detrás.
 - **Chip de tamaño en las tarjetas**: la vista previa de cada juego (Home y Explorar) ahora muestra el tamaño real (`specs.tamano`) como chip sobre la portada, sin necesidad de abrir la ficha.
 - **Publicado en producción (Cloudflare)**: el sitio se sirve desde Cloudflare Workers (`noxis-hub-app.nicolabarranco2.workers.dev`), con **deploy automático al hacer push a `main`**. Se abandonó GitHub Pages.

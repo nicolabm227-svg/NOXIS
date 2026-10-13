@@ -14,6 +14,8 @@
   const Game = {
     root: null,
     current: null,
+    lastFocused: null,
+    keyHandler: null,
 
     init() {
       this.root = $("#view-game");
@@ -26,10 +28,12 @@
 
       this.init();
       this.current = game;
+      this.lastFocused = document.activeElement;
       if (global.NOXIS.Analytics) {
         global.NOXIS.Analytics.track("open", { gameId: game.id });
       }
       this.root.innerHTML = this.render(game);
+      this.root.setAttribute("aria-labelledby", "game-window-title");
       this.bindEvents(game);
 
       // Bloquear el scroll del fondo y mostrar
@@ -37,6 +41,10 @@
       this.root.setAttribute("aria-hidden", "false");
       this.root.classList.remove("is-closing");
       this.root.classList.add("is-open");
+
+      // Llevar el foco al diálogo para lectores de pantalla y teclado.
+      const target = $(".game-window__dot--close", this.root);
+      if (target) target.focus();
     },
 
     /* Cierra la ventana y vuelve a la vista anterior. */
@@ -44,6 +52,23 @@
       if (!this.root || !this.root.classList.contains("is-open")) return;
 
       this.root.classList.add("is-closing");
+
+      // Quitar el listener de teclado (siempre, no solo al cerrar con Esc).
+      if (this.keyHandler) {
+        document.removeEventListener("keydown", this.keyHandler);
+        this.keyHandler = null;
+      }
+
+      // Devolver el foco al elemento que abrió la ventana.
+      if (this.lastFocused && typeof this.lastFocused.focus === "function") {
+        try {
+          this.lastFocused.focus({ preventScroll: true });
+        } catch (e) {
+          /* el elemento pudo desaparecer: se ignora */
+        }
+      }
+      this.lastFocused = null;
+
       setTimeout(() => {
         this.root.classList.remove("is-open", "is-closing");
         this.root.setAttribute("aria-hidden", "true");
@@ -52,28 +77,41 @@
       }, 220);
     },
 
+    /* Mantiene el foco (Tab) dentro de la ventana mientras está abierta. */
+    trapFocus(e) {
+      if (e.key !== "Tab" || !this.root) return;
+      const focusable = $$(
+        'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])',
+        this.root
+      ).filter((el) => el.offsetParent !== null);
+      if (!focusable.length) return;
+
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    },
+
     bindEvents(game) {
-      // Punto rojo: cierra la ventana (misma acción de cierre que el fondo).
+      // Punto rojo (botón): cierra la ventana, igual que el fondo.
       const closeDot = $(".game-window__dot--close", this.root);
       if (closeDot) {
         closeDot.addEventListener("click", () => this.close());
-        closeDot.addEventListener("keydown", (e) => {
-          if (e.key === "Enter" || e.key === " ") {
-            e.preventDefault();
-            this.close();
-          }
-        });
       }
       $(".game-window__backdrop", this.root).addEventListener("click", () => this.close());
 
-      // Esc con teclado
-      const onKey = (e) => {
-        if (e.key === "Escape") {
-          this.close();
-          document.removeEventListener("keydown", onKey);
-        }
+      // Esc cierra; Tab queda atrapado dentro de la ventana.
+      this.keyHandler = (e) => {
+        if (e.key === "Escape") this.close();
+        else this.trapFocus(e);
       };
-      document.addEventListener("keydown", onKey);
+      document.addEventListener("keydown", this.keyHandler);
 
       // Tabs (áreas preparadas)
       const tabs = $$(".game-window__tab", this.root);
@@ -153,12 +191,12 @@
         <div class="game-window__backdrop"></div>
         <div class="game-window__frame">
           <div class="game-window__bar">
-            <div class="game-window__controls" aria-hidden="true">
-              <span class="game-window__dot game-window__dot--close" role="button" tabindex="0" aria-label="Cerrar ventana"></span>
-              <span class="game-window__dot game-window__dot--minimize"></span>
-              <span class="game-window__dot game-window__dot--maximize"></span>
+            <div class="game-window__controls">
+              <button type="button" class="game-window__dot game-window__dot--close" aria-label="Cerrar ventana"></button>
+              <span class="game-window__dot game-window__dot--minimize" aria-hidden="true"></span>
+              <span class="game-window__dot game-window__dot--maximize" aria-hidden="true"></span>
             </div>
-            <div class="game-window__title"><strong>NOXIS</strong> <em>/</em> ${game.title}</div>
+            <div class="game-window__title" id="game-window-title"><strong>NOXIS</strong> <em>/</em> ${game.title}</div>
           </div>
 
           <div class="game-window__body">

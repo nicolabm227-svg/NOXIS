@@ -14,15 +14,12 @@
     gridEls: {},
     observer: null,
     searchInput: null,
-    suggestEl: null,
 
     init() {
       this.searchInput = $("#global-search");
-      this.suggestEl = $("#search-suggest");
       this.setupGrids();
       this.setupRevealObserver();
       this.bindSearch();
-      this.bindSuggest();
       this.renderSections();
       // Refleja el estado actual del buscador (p. ej. al volver a Inicio).
       this.applySearch(this.searchInput ? this.searchInput.value.trim() : "");
@@ -39,14 +36,23 @@
       });
     },
 
-    /* Construye cada sección con los juegos provistos por Data. */
+    /* Construye cada sección con los juegos provistos por Data.
+       Las secciones sin juegos (p. ej. catálogo chico) se ocultan. */
     renderSections() {
-      const sections = global.NOXIS.Data.getSections();
+      const byKey = {};
+      global.NOXIS.Data.getSections().forEach((s) => {
+        byKey[s.key] = s;
+      });
 
-      sections.forEach((section) => {
-        const grid = this.gridEls[section.key];
-        if (!grid) return;
-        grid.innerHTML = section.games.map((game) => this.cardMarkup(game)).join("");
+      Object.keys(this.sectionEls).forEach((key) => {
+        const section = this.sectionEls[key];
+        const grid = this.gridEls[key];
+        const data = byKey[key];
+        const has = !!(data && data.games.length);
+        if (section) section.classList.toggle("is-hidden", !has);
+        if (grid && has) {
+          grid.innerHTML = data.games.map((game, i) => this.cardMarkup(game, i)).join("");
+        }
       });
 
       this.observeCards();
@@ -56,11 +62,11 @@
        se delega en el App (hook del router).
        En Home se prioriza la portada y se reduce la información a
        una sola línea secundaria (categoría · año). */
-    cardMarkup(game) {
+    cardMarkup(game, index) {
       return `
-        <a href="#" class="game-card" data-game-id="${game.id}" aria-label="Abrir ${game.title}">
+        <a href="#" class="game-card" data-game-id="${game.id}" style="--i:${index || 0}" aria-label="Abrir ${game.title}">
           <div class="game-card__cover">
-            <img class="game-card__img" src="${game.cover}" alt="Portada de ${game.title}" loading="lazy" />
+            <img class="game-card__img" src="${game.cover}" alt="Portada de ${game.title}" loading="lazy" decoding="async" />
             ${game.specs && game.specs.tamano ? `<span class="game-card__size">${game.specs.tamano}</span>` : ""}
             <div class="game-card__body">
               <h3 class="game-card__title">${game.title}</h3>
@@ -73,6 +79,7 @@
 
     /* Aparición progresiva de las tarjetas al hacer scroll. */
     setupRevealObserver() {
+      if (this.observer) this.observer.disconnect();
       if ("IntersectionObserver" in window) {
         this.observer = new IntersectionObserver(
           (entries) => {
@@ -89,25 +96,31 @@
     },
 
     observeCards() {
-      if (!this.observer) {
-        document.querySelectorAll(".game-card").forEach((c) => c.classList.add("is-visible"));
-        this.bindCardClicks();
-        return;
+      const root = document.getElementById("view-home");
+      if (!root) return;
+      const cards = root.querySelectorAll(".game-card");
+      if (this.observer) {
+        cards.forEach((card) => this.observer.observe(card));
+      } else {
+        cards.forEach((card) => card.classList.add("is-visible"));
       }
-      const cards = document.querySelectorAll(".game-card");
-      cards.forEach((card) => this.observer.observe(card));
       this.bindCardClicks();
     },
 
+    /* Delegación única sobre la vista de Inicio: evita re-engarzar
+       listeners en cada re-render y no toca las tarjetas de Explorar. */
     bindCardClicks() {
-      document.querySelectorAll(".game-card").forEach((card) => {
-        card.addEventListener("click", (e) => {
-          e.preventDefault();
-          const id = card.dataset.gameId;
-          if (id && typeof global.NOXIS.App.openGame === "function") {
-            global.NOXIS.App.openGame(id);
-          }
-        });
+      const root = document.getElementById("view-home");
+      if (!root || root.dataset.cardsBound) return;
+      root.dataset.cardsBound = "1";
+      root.addEventListener("click", (e) => {
+        const card = e.target.closest(".game-card");
+        if (!card || !root.contains(card)) return;
+        e.preventDefault();
+        const id = card.dataset.gameId;
+        if (id && typeof global.NOXIS.App.openGame === "function") {
+          global.NOXIS.App.openGame(id);
+        }
       });
     },
 
@@ -130,14 +143,20 @@
       };
 
       if (!q) {
-        ["featured", "new", "popular"].forEach((key) => {
-          const grid = this.gridEls[key];
-          if (grid) {
-            grid.innerHTML = Data.getSectionGames(key)
-              .map((game) => this.cardMarkup(game))
-              .join("");
+        const byKey = {};
+        Data.getSections().forEach((s) => {
+          byKey[s.key] = s;
+        });
+        Object.keys(this.sectionEls).forEach((key) => {
+          const data = byKey[key];
+          const has = !!(data && data.games.length);
+          setVisible(key, has);
+          if (has) {
+            const grid = this.gridEls[key];
+            if (grid) {
+              grid.innerHTML = data.games.map((game, i) => this.cardMarkup(game, i)).join("");
+            }
           }
-          setVisible(key, true);
         });
         this.setFeaturedHeading("Destacados");
         this.observeCards();
@@ -148,7 +167,7 @@
       const grid = this.gridEls.featured;
       if (grid) {
         grid.innerHTML = results.length
-          ? results.map((game) => this.cardMarkup(game)).join("")
+          ? results.map((game, i) => this.cardMarkup(game, i)).join("")
           : `<p class="cards-empty">No se encontraron juegos para “${q}”.</p>`;
       }
       this.setFeaturedHeading(results.length ? "Resultados" : "Sin resultados");
@@ -165,81 +184,6 @@
       if (heading) heading.textContent = text;
     },
 
-    /* Sugerencias instantáneas bajo el buscador.
-       Reutiliza Data.searchGames (case-insensitive, por nombre y más),
-       no duplica filtrado: solo presenta un atajo de navegación. */
-    bindSuggest() {
-      if (!this.searchInput || !this.suggestEl) return;
-      const input = this.searchInput;
-      const box = this.suggestEl;
-
-      const close = () => {
-        box.innerHTML = "";
-        box.classList.add("is-hidden");
-      };
-
-      /* Salir del buscador: limpia el input y restaura las secciones
-         (Home) o el catálogo completo (Explorar) vía el evento input. */
-      const exitSearch = () => {
-        if (!input.value) {
-          close();
-          return;
-        }
-        input.value = "";
-        input.dispatchEvent(new Event("input", { bubbles: true }));
-        close();
-      };
-
-      const open = (q) => {
-        const results = global.NOXIS.Data.searchGames(q).slice(0, 5);
-        if (!results.length) {
-          close();
-          return;
-        }
-
-        box.innerHTML = results
-          .map(
-            (game) => `
-            <button type="button" class="search-suggest__item" data-game-id="${game.id}" role="option">
-              <img class="search-suggest__thumb" src="${game.cover}" alt="Portada de ${game.title}" />
-              <span class="search-suggest__name">${game.title}</span>
-            </button>
-          `
-          )
-          .join("");
-        box.classList.remove("is-hidden");
-
-        box.querySelectorAll(".search-suggest__item").forEach((item) => {
-          item.addEventListener("click", () => {
-            const id = item.dataset.gameId;
-            input.value = "";
-            input.dispatchEvent(new Event("input", { bubbles: true }));
-            close();
-            if (id && typeof global.NOXIS.App.openGame === "function") {
-              global.NOXIS.App.openGame(id);
-            }
-          });
-        });
-      };
-
-      input.addEventListener("input", () => {
-        const q = input.value.trim();
-        if (!q) {
-          close();
-          return;
-        }
-        open(q);
-      });
-
-      input.addEventListener("keydown", (e) => {
-        if (e.key === "Escape") exitSearch();
-      });
-
-      document.addEventListener("click", (e) => {
-        if (box.contains(e.target) || e.target === input) return;
-        if (!box.classList.contains("is-hidden") || input.value) exitSearch();
-      });
-    },
   };
 
   /* Re-renderiza las secciones cuando llega la popularidad dinámica

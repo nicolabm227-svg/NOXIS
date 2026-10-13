@@ -32,6 +32,15 @@
       this.renderFacets();
       this.renderTools();
       this.bindEvents();
+
+      // Orden heredado de los accesos "Ver todo" de la Home.
+      const appState = global.NOXIS.App ? global.NOXIS.App.state : null;
+      const preset = appState ? appState.exploreSort : null;
+      if (preset === "new") this.state.sort = "recent";
+      else if (preset === "featured" || preset === "popular") this.state.sort = "popular";
+      if (appState) appState.exploreSort = null;
+      if (this.sort) this.sort.value = this.state.sort;
+
       // La barra del header también filtra el catálogo de Explorar.
       const gi = document.getElementById("global-search");
       this.state.query = gi ? gi.value.trim() : "";
@@ -65,6 +74,7 @@
     },
 
     setupRevealObserver() {
+      if (this.observer) this.observer.disconnect();
       if ("IntersectionObserver" in window) {
         this.observer = new IntersectionObserver(
           (entries) => {
@@ -229,11 +239,11 @@
     },
 
     /* Marca de tarjeta (variante compacta para Explorar). */
-    cardMarkup(game) {
+    cardMarkup(game, index) {
       return `
-        <a href="#" class="game-card" data-game-id="${game.id}" aria-label="Abrir ${game.title}">
+        <a href="#" class="game-card" data-game-id="${game.id}" style="--i:${index || 0}" aria-label="Abrir ${game.title}">
           <div class="game-card__cover">
-            <img class="game-card__img" src="${game.cover}" alt="Portada de ${game.title}" loading="lazy" />
+            <img class="game-card__img" src="${game.cover}" alt="Portada de ${game.title}" loading="lazy" decoding="async" />
             ${game.specs && game.specs.tamano ? `<span class="game-card__size">${game.specs.tamano}</span>` : ""}
             <div class="game-card__body">
               <span class="game-card__meta">${game.category}</span>
@@ -282,7 +292,12 @@
       this.syncClear();
 
       // Grid
-      this.grid.innerHTML = pageGames.map((g) => this.cardMarkup(g)).join("");
+      if (total === 0) {
+        this.grid.innerHTML =
+          '<p class="cards-empty">No se encontraron juegos con esos filtros.</p>';
+      } else {
+        this.grid.innerHTML = pageGames.map((g, i) => this.cardMarkup(g, i)).join("");
+      }
 
       // Estado activo en píldoras
       this.syncActiveChips();
@@ -364,14 +379,16 @@
     },
 
     bindCardClicks() {
-      $$(".game-card", this.grid).forEach((card) => {
-        card.addEventListener("click", (e) => {
-          e.preventDefault();
-          const id = card.dataset.gameId;
-          if (id && typeof global.NOXIS.App.openGame === "function") {
-            global.NOXIS.App.openGame(id);
-          }
-        });
+      if (!this.grid || this.grid.dataset.cardsBound) return;
+      this.grid.dataset.cardsBound = "1";
+      this.grid.addEventListener("click", (e) => {
+        const card = e.target.closest(".game-card");
+        if (!card) return;
+        e.preventDefault();
+        const id = card.dataset.gameId;
+        if (id && typeof global.NOXIS.App.openGame === "function") {
+          global.NOXIS.App.openGame(id);
+        }
       });
     },
   };

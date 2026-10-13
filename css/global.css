@@ -13,7 +13,7 @@
 
   --text: #f5f7fc;
   --text-dim: #98a1b0;
-  --text-faint: #5c6472;
+  --text-faint: #7b8494;
 
   --line: rgba(148, 163, 184, 0.10);
   --line-strong: rgba(148, 163, 184, 0.20);
@@ -77,15 +77,24 @@ body {
   line-height: 1.5;
   color: var(--text);
   background-color: var(--bg);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Halos de fondo en una capa fija (compuesta, sin repintar al hacer scroll).
+   Evita el costoso background-attachment: fixed sobre el body. */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
   background-image:
     radial-gradient(1100px 560px at 82% -8%, rgba(59, 130, 246, 0.09), transparent 62%),
     radial-gradient(820px 460px at -6% 12%, rgba(124, 92, 245, 0.06), transparent 58%),
     radial-gradient(700px 420px at 110% 60%, rgba(46, 111, 224, 0.05), transparent 60%);
-  background-attachment: fixed;
   background-repeat: no-repeat;
-  min-height: 100vh;
-  -webkit-font-smoothing: antialiased;
-  text-rendering: optimizeLegibility;
 }
 
 body.no-scroll {
@@ -117,6 +126,20 @@ a {
 
 ul {
   list-style: none;
+}
+
+/* Foco de teclado visible y consistente en todos los interactivos.
+   Los componentes que ya definen su propio anillo con box-shadow
+   lo anulan (outline: none) de forma puntual. */
+:focus-visible {
+  outline: 2px solid var(--accent-soft);
+  outline-offset: 2px;
+  border-radius: inherit;
+}
+
+/* La caja del buscador ya comunica el foco con :focus-within. */
+.nav__search input:focus-visible {
+  outline: none;
 }
 
 ::selection {
@@ -175,4 +198,25 @@ ul {
     animation-iteration-count: 1 !important;
     transition-duration: 0.001ms !important;
   }
+}
+
+/* Áreas táctiles cómodas (≥44px) en dispositivos de puntero grueso.
+   Se prefija con `html` para ganar a las reglas de los componentes. */
+@media (pointer: coarse) {
+  html .nav__link { padding-top: 12px; padding-bottom: 12px; }
+  html .brand { min-height: 44px; }
+  html .nav__account-btn { width: 40px; height: 40px; }
+  html .section-head__more { min-height: 44px; padding: 10px 14px; }
+  html .search-suggest__item { min-height: 44px; padding: 9px; }
+  html .filter-chip { min-height: 44px; padding: 9px 13px; }
+  html .accordion__head { min-height: 44px; }
+  html .tool-item { min-height: 44px; padding-top: 10px; padding-bottom: 10px; }
+  html .pagination__btn { min-width: 44px; height: 44px; }
+  html .gallery__nav { width: 44px; height: 44px; }
+  html .gallery__dots { gap: 12px; }
+  html .gallery__dot { position: relative; width: 10px; height: 10px; }
+  html .gallery__dot::after { content: ""; position: absolute; inset: -11px; border-radius: 50%; }
+  html .btn-primary,
+  html .btn-secondary { min-height: 44px; }
+  html .back-to-top { width: 48px; height: 48px; }
 }

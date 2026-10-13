@@ -51,7 +51,10 @@ Estado real: es front-end **más un backend mínimo y opcional** para el ranking
 - **Cambio de vista**: `App.navigate(route)` → `App.showRoute(route)` → oculta vistas `main[id^='view-']`, muestra la objetivo, invoca `NOXIS.RouterHooks(route, state)`.
 - **RouterHooks** es una sola función global que `home.js` define y que `explore.js` **encadena** (envuelve). Si añadís otra vista con hook, seguí ese patrón (guardar `existingHook` y llamarlo).
 - **Abrir juego**: el clic en una tarjeta llama `App.openGame(id)` → `NOXIS.Game.open(id)`. **No se navega a una ruta "game"**; es un overlay.
-- **Cerrar juego**: punto rojo, clic en backdrop, o `Escape` → `Game.close()`.
+- **Cerrar juego**: punto rojo, clic en backdrop, o `Escape` → `Game.close()`. La ventana gestiona el foco (trampa de Tab, foco al abrir, devuelve el foco al cerrar) y limpia su listener de teclado.
+- **Buscador global**: las **sugerencias** (`#global-search` / `#search-suggest`) viven en `app.js` (`App.bindSuggest`), compartidas por Home y Explorar (antes estaban en `home.js`). Salir del buscador (Escape, clic afuera, o al elegir sugerencia) limpia el input y **restaura** la vista vía el evento `input`.
+- **"Ver todo"**: cada sección de la Home navega a Explorar pasando su orden (`App.state.exploreSort`); `explore.js` lo aplica al inicializar.
+- **Volver arriba**: botón flotante `#back-to-top` gestionado por `App.bindBackToTop`.
 - **Fuente de datos**: el origen es `data.js`; el objetivo es poder migrar a Firebase **sin tocar las vistas** (solo habría que cambiar `Data` internamente).
 
 ### Analítica + ranking (flujo real)
@@ -62,7 +65,19 @@ Estado real: es front-end **más un backend mínimo y opcional** para el ranking
 4. `NOXIS.Data.init()` hace `GET /popular`, guarda el mapa `{ gameId: score }` y dispara el evento `noxis:popularity`.
 5. `home.js` y `explore.js` escuchan `noxis:popularity` y **re-renderizan**. Sin backend/conexión, se usa el campo estático `popular`.
 
-## 5. Cómo hacer un cambio pequeño (receta)
+## 5. Cómo agregar un juego nuevo
+
+**Guía completa y paso a paso en [AGREGAR-JUEGO.md](AGREGAR-JUEGO.md).** Resumen:
+
+1. Material crudo en `Contenedor de juegos/<Nombre>/` (gitignored): `Portada.jpg`, `Complementaria N.webp`, `informacion.txt`, `.torrent`.
+2. Copiá/renombrá a `assets/images/games/<id>/`: `portada.jpg` + `complementaria-1.webp`, `complementaria-2.webp`, …
+3. Extraé requisitos, ficha técnica (`specs`), descripción y enlaces del `informacion.txt`.
+4. Agregá un objeto al array `games` de `js/data.js` (modelo: `cyberpunk-2077`).
+5. `node --check js/data.js`, subí `?v=N` en `index.html`, probá y `git push origin main`.
+
+**No se tocan las vistas**: facetas, secciones, tarjetas y ficha se generan a partir de los datos.
+
+## 6. Cómo hacer un cambio pequeño (receta)
 
 1. Leé el/los archivo/s implicados.
 2. Hacé el cambio mínimo que cumpla la instrucción.
@@ -71,15 +86,15 @@ Estado real: es front-end **más un backend mínimo y opcional** para el ranking
 5. Probá las pantallas afectadas (Home, Explorar, ventana del juego).
 6. Si tocaste CSS/JS, subí `?v=N`. Si tocaste el Worker, `wrangler deploy`.
 
-## 6. Cómo probar
+## 7. Cómo probar
 
 - Servidor local (VS Code Live Server o `npx.cmd serve .`). **Python no está disponible** en el entorno.
 - `node --check js/<archivo>.js` (incluye `js/analytics.js`).
-- Consola del navegador sin errores. (Hay un 404 conocido de `favicon.ico`, inofensivo.)
+- Consola del navegador sin errores (el favicon ya está declarado: `assets/images/favicon-32.png`).
 - Backend: `npx.cmd wrangler dev` desde `worker/` para probar `/event` y `/popular` en local.
 - En local, la analítica **no** envía (guard por hostname) y se usa la popularidad estática.
 
-## 7. Despliegue (resumen)
+## 8. Despliegue (resumen)
 
 - **Sitio**: `git push origin main` → Cloudflare publica solo (≈1–2 min).
 - **Worker**: `npx.cmd wrangler deploy` desde `worker/` (manual).
@@ -87,14 +102,14 @@ Estado real: es front-end **más un backend mínimo y opcional** para el ranking
 
 Detalle completo, URLs, verificaciones y rollback en [DEPLOY.md](DEPLOY.md).
 
-## 8. Cómo hacer documentación
+## 9. Cómo hacer documentación
 
 - Actualizá [PROJECT_STATUS.md](PROJECT_STATUS.md) si cambia el estado.
 - Registrá el cambio en [CHANGELOG.md](CHANGELOG.md).
 - Si cambia la arquitectura o el despliegue: [ARCHITECTURE.md](ARCHITECTURE.md), [DECISIONS.md](DECISIONS.md), [DEPLOY.md](DEPLOY.md).
 - Si cambia la capa de datos: actualizá la sección de datos y los ejemplos.
 
-## 9. Dónde está cada cosa
+## 10. Dónde está cada cosa
 
 - **Analítica (front)**: `js/analytics.js` (`NOXIS.Analytics`, `WORKER_URL`).
 - **Datos**: `js/data.js` (`games`, `tools`, `popularity`, `Data`).
@@ -106,9 +121,10 @@ Detalle completo, URLs, verificaciones y rollback en [DEPLOY.md](DEPLOY.md).
 - **Componentes compartidos**: `css/components.css`. **Tokens/paleta**: `css/global.css`.
 - **Portadas/galería**: `assets/images/games/<id>/portada.jpg` y `complementaria-N.jpg`.
 - **Logo de marca**: `assets/images/logo.webp` (generado desde `Logo1.png`, recortado, fondo transparente; en el header se muestra cuadrado con `object-fit: cover`).
-- **Material crudo**: `Contenedor de juegos/<Nombre>/` (gitignored).
+- **Favicon**: `assets/images/favicon-32.png` y `assets/images/apple-touch-icon.png` (declarados en `index.html`).
+- **Flujo para cargar un juego**: [AGREGAR-JUEGO.md](AGREGAR-JUEGO.md). **Material crudo**: `Contenedor de juegos/<Nombre>/` (gitignored).
 
-## 10. Errores conocidos que no debés reintroducir
+## 11. Errores conocidos que no debés reintroducir
 
 - No navegues a `#view-game` como si fuera una vista normal del router; usá `Game.open`.
 - No dupliques el markup de tarjeta en otros archivos; reusá el patrón de `home.js`/`explore.js`.
