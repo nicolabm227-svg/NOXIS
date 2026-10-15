@@ -65,6 +65,7 @@
         "assets/images/games/cyberpunk-2077/complementaria-2.webp",
         "assets/images/games/cyberpunk-2077/complementaria-3.webp",
       ],
+      dlc: ["Phantom Liberty"],
     },
     {
       id: "god-of-war",
@@ -163,6 +164,7 @@
         "assets/images/games/red-dead-redemption-2/complementaria-2.jpg",
         "assets/images/games/red-dead-redemption-2/complementaria-3.jpg",
       ],
+      dlc: ["Red Dead Online"],
     },
     {
       id: "command-and-conquer-red-alert-3",
@@ -206,6 +208,7 @@
         "assets/images/games/command-and-conquer-red-alert-3/complementaria-3.jpg",
         "assets/images/games/command-and-conquer-red-alert-3/complementaria-4.jpg",
       ],
+      dlc: ["Uprising"],
     },
     {
       id: "rise-of-nations-extended-edition",
@@ -259,6 +262,7 @@
         "assets/images/games/rise-of-nations-extended-edition/complementaria-3.jpg",
         "assets/images/games/rise-of-nations-extended-edition/complementaria-4.jpg",
       ],
+      dlc: ["Thrones and Patriots"],
     },
     /* ── Juego real (cargado manualmente desde "Contenedor de juegos") ── */
     {
@@ -312,6 +316,7 @@
         "assets/images/games/diablo-ii-resurrected/complementaria-3.png",
         "assets/images/games/diablo-ii-resurrected/complementaria-4.webp",
       ],
+      dlc: ["Lord of Destruction"],
     },
   ];
 

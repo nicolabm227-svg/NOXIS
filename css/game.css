@@ -419,6 +419,37 @@
   color: var(--text);
 }
 
+/* Contenido adicional (DLC) — sección dentro de la pestaña Información */
+.game-window__dlc {
+  margin-top: 20px;
+}
+
+.dlc-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  list-style: none;
+}
+
+.dlc-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 7px 14px;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.02);
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: var(--text-dim);
+}
+
+.dlc-item::before {
+  content: "+";
+  font-weight: 700;
+  color: var(--accent-soft);
+}
+
 /* Placeholder de próximos bloques */
 .game-window__placeholder {
   padding: 26px;

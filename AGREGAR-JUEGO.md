@@ -38,10 +38,23 @@ Cada carpeta en `Contenedor de juegos/<Nombre>/` contiene:
 | **Requisitos Recomendados** | `requirements.rec` |
 | **Ficha técnica** (Plataforma, Idioma textos, Idioma voces, Año, Tamaño, Formato, Género) | `specs` |
 | **Descripción** | `description` |
+| **DLC / expansiones incluidas** (si el texto las menciona) | `dlc` (array de nombres) |
 | **Descargar:** `<url>` | `links.download` |
 | **Comprar:** `<url>` | `links.purchase` |
 
 Si falta el bloque "Ficha técnica" (pasa en varios juegos), completá `specs` con datos provisionales marcados mentalmente como tales y avisá; se corrigen cuando llegue la ficha real.
+
+### Cómo detectar los DLC en el texto
+
+Casi siempre el texto **menciona** las expansiones/DLC que trae el paquete. Antes de armar el objeto, buscá:
+
+- Un bloque explícito tipo **"DLC:"**, **"Contenido adicional:"** o **"Incluye:"**.
+- Nombres de expansión **dentro de la descripción** (p. ej. *"…incluye su expansión Thrones and Patriots"*).
+- Ediciones que **implican contenido incluido** en el propio título: *Complete Collection*, *Extended Edition*, *GOTY*, *Infernal Edition*, etc.
+
+Cargá cada uno como string en `dlc` (solo el nombre). Ejemplos ya cargados: `["Thrones and Patriots"]`, `["Uprising"]`, `["Phantom Liberty"]`, `["Lord of Destruction"]`.
+
+> Si el texto no lo dice con claridad, **no lo inventes**: preguntá antes de publicar. Si un juego no tiene DLC, simplemente omití el campo `dlc` (la ventana no muestra el bloque).
 
 ---
 
@@ -130,6 +143,7 @@ Dentro del array `games` (ver el objeto de `cyberpunk-2077` como modelo), agreg�
     "assets/images/games/red-dead-redemption-2/complementaria-1.webp",
     "assets/images/games/red-dead-redemption-2/complementaria-2.webp",
   ],
+  dlc: ["Undead Nightmare"],            // DLC/expansiones incluidas (opcional)
 },
 ```
 
@@ -139,7 +153,7 @@ Dentro del array `games` (ver el objeto de `cyberpunk-2077` como modelo), agreg�
 - **Filtros (Explorar)**: `category`, `genre`, `os`, `year`.
 - **Orden**: `popular` (fallback), `year`, `rating`.
 - **Home**: `featured` (sección "Destacados").
-- **Ventana del juego**: `description`, `specs`, `requirements`, `gallery`, `links`.
+- **Ventana del juego**: `description`, `specs`, `requirements`, `gallery`, `links`, `dlc` (opcional).
 
 > Todo bloque es opcional: si falta (`links`, `requirements`, `gallery`), la ventana **degrada con elegancia** (botones deshabilitados, "próximamente"). Pero completá lo máximo posible.
 >
@@ -199,9 +213,10 @@ git push origin main
 1. `id` elegido (minúsculas, guiones).
 2. Portada y complementarias copiadas a `assets/images/games/<id>/` con los nombres exactos.
 3. Objeto agregado a `games` en `js/data.js`.
-4. `node --check js/data.js`.
-5. `?v=N` subido en `index.html`.
-6. Probado en Home, Explorar y ficha.
-7. `git push origin main`.
+4. DLC/expansiones incluidas volcadas en `dlc` (si el texto las menciona).
+5. `node --check js/data.js`.
+6. `?v=N` subido en `index.html`.
+7. Probado en Home, Explorar y ficha (incluido el bloque DLC si aplica).
+8. `git push origin main`.
 
 > ¿Necesitás el detalle del schema completo? Ver [ARCHITECTURE.md](ARCHITECTURE.md#estructura-de-un-juego). ¿Cómo se despliega? Ver [DEPLOY.md](DEPLOY.md).

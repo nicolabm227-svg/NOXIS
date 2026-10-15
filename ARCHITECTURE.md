@@ -140,6 +140,9 @@ Cada elemento del array `games` en `js/data.js` tiene esta forma (campos reales)
     "assets/images/games/cyberpunk-2077/complementaria-1.webp",
     "assets/images/games/cyberpunk-2077/complementaria-2.webp",
   ],
+  dlc: [                         // opcional: contenido adicional incluido
+    "Phantom Liberty",           // se muestra dentro de la pestaña "Información"
+  ],
 }
 ```
 
@@ -149,6 +152,7 @@ Campos y su uso:
 - `popular`, `year`, `rating` → ordenamiento (con `popular` como fallback).
 - `featured` → sección "Destacados".
 - `description`, `specs`, `requirements`, `gallery`, `links` → ventana del juego.
+- `dlc` (opcional) → array de nombres de DLC/expansiones incluidas; se lista como "Contenido adicional (DLC)" dentro de la pestaña **Información**.
 
 > Cada juego puede no tener todos los bloques. `game.js` degrada con elegancia: sin `links` los botones quedan `disabled`; sin `requirements`/`gallery` muestra "próximamente".
 

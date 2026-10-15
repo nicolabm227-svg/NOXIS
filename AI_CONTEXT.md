@@ -116,7 +116,7 @@ Detalle completo, URLs, verificaciones y rollback en [DEPLOY.md](DEPLOY.md).
 - **Navegación**: `js/app.js`.
 - **Home**: `js/home.js` + `css/home.css`.
 - **Explorar**: `js/explore.js` + `css/explore.css`.
-- **Ventana del juego**: `js/game.js` + `css/game.css`.
+- **Ventana del juego**: `js/game.js` + `css/game.css`. Pestañas: Información (ficha técnica + bloque **DLC** si el juego tiene `dlc`), Requisitos, Galería.
 - **Backend de ranking**: `worker/index.js` + `worker/wrangler.toml`.
 - **Componentes compartidos**: `css/components.css`. **Tokens/paleta**: `css/global.css`.
 - **Portadas/galería**: `assets/images/games/<id>/portada.jpg` y `complementaria-N.jpg`.

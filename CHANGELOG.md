@@ -17,6 +17,7 @@ Registro del estado conocido y la evolución del proyecto. No se dispone de fech
 
 ### Cambios recientes
 
+- **DLC / contenido adicional**: nuevo campo opcional `dlc` en `data.js` (array de nombres). La ficha del juego muestra un bloque **"Contenido adicional (DLC)"** dentro de la pestaña *Información* (solo si el juego tiene `dlc`). Retro-cargado en los juegos que lo incluían (Thrones and Patriots, Uprising, Phantom Liberty, Red Dead Online, Lord of Destruction). Flujo de detección documentado en `AGREGAR-JUEGO.md`.
 - **Google Search Console**: se agrega la meta etiqueta de verificación (`google-site-verification`) en `index.html` y un `sitemap.xml` en la raíz con la URL pública, para habilitar la indexación en Google.
 - **Nuevo juego**: **Diablo II: Resurrected — Infernal Edition** (PC, 2021) agregado al catálogo (assets en `assets/images/games/diablo-ii-resurrected/` + objeto en `js/data.js`).
 - **Favicon**: se declaran `assets/images/favicon-32.png` y `assets/images/apple-touch-icon.png`, más `theme-color` y `color-scheme: dark`. Se elimina el 404 de `favicon.ico`.

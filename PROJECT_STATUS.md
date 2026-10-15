@@ -36,7 +36,7 @@ Fotografía del proyecto en el momento de redactar este documento. El código es
 - Portada 2:3, kicker, título, pills (año, plataformas, rating).
 - **Descripción real** (campo `description`; fallback derivado si falta).
 - Pestañas:
-  - **Información**: ficha técnica (`specs`: plataforma, género, año, idiomas, tamaño, formato).
+  - **Información**: ficha técnica (`specs`: plataforma, género, año, idiomas, tamaño, formato) y, si el juego trae `dlc`, el bloque **"Contenido adicional (DLC)"**.
   - **Requisitos**: bloques *Mínimos* / *Recomendados* (`requirements.min` / `req`).
   - **Galería**: carrusel horizontal con imágenes reales (`gallery` + dots + prev/next).
 - Botones **Descargar** (abre `links.download`) y **Comprar** (abre `links.purchase`) en pestaña nueva. Si falta el link, el botón queda `disabled`.
@@ -45,7 +45,7 @@ Fotografía del proyecto en el momento de redactar este documento. El código es
 
 ### Fuente de datos
 - `NOXIS.Data` con **6 juegos reales** y 5 herramientas.
-- Estructura rica por juego: `description`, `requirements`, `specs`, `links`, `gallery` (ver [ARCHITECTURE.md](ARCHITECTURE.md#estructura-de-un-juego)).
+- Estructura rica por juego: `description`, `requirements`, `specs`, `links`, `gallery`, `dlc` (opcional) (ver [ARCHITECTURE.md](ARCHITECTURE.md#estructura-de-un-juego)).
 - API: `init`, `getAllGames`, `getSectionGames`, `getSections`, `searchGames`, `getFacets`, `getTools`, `filterGames`.
 
 ### Analítica y ranking (backend)

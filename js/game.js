@@ -324,6 +324,17 @@
         { label: "Formato", value: s.formato },
       ].filter((r) => r.value);
 
+      const dlc = Array.isArray(game.dlc) ? game.dlc.filter(Boolean) : [];
+      const dlcMarkup = dlc.length
+        ? `
+        <div class="game-window__dlc">
+          <h4 class="game-window__section-title">Contenido adicional (DLC)</h4>
+          <ul class="dlc-list">
+            ${dlc.map((name) => `<li class="dlc-item">${name}</li>`).join("")}
+          </ul>
+        </div>`
+        : "";
+
       return `
         <dl class="game-window__info-grid">
           ${rows
@@ -331,7 +342,7 @@
               (r) => `<div class="game-window__info-cell"><dt>${r.label}</dt><dd>${r.value}</dd></div>`
             )
             .join("")}
-        </dl>`;
+        </dl>${dlcMarkup}`;
     },
 
     /* Galería horizontal: las imágenes se pasan de izquierda a derecha. */
