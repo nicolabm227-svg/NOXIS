@@ -246,7 +246,8 @@ Flujo conceptual: detección (scan del filesystem/Storage) → validación (`dat
 
 ## Separación de responsabilidades (resumen)
 
-- `index.html`: esqueleto estático y contenedores (loader, header, vistas, overlay del juego, backdrop).
+- `index.html`: esqueleto estático y contenedores (loader, header, vistas, overlay del juego, backdrop). Incluye la meta de verificación de Google Search Console.
+- `sitemap.xml` (raíz): sitemap para indexación en Google (una URL: `/`).
 - `analytics.js`: envío anónimo de eventos al Worker de ranking.
 - `data.js`: única fuente de datos + popularidad dinámica.
 - `app.js`: núcleo (loader, router, navegación).

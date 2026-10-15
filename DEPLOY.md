@@ -71,6 +71,7 @@ Sitio:
 
 - Abrir `https://noxis-hub-app.nicolabarranco2.workers.dev/` y comprobar que carga el catálogo.
 - Consola del navegador sin errores.
+- Indexación: `https://noxis-hub-app.nicolabarranco2.workers.dev/sitemap.xml` debe responder **200**. El `index.html` servido incluye la meta `google-site-verification` (verificación de Google Search Console).
 
 Worker:
 

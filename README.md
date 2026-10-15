@@ -59,6 +59,7 @@ Para el detalle completo, ver [PROJECT_STATUS.md](PROJECT_STATUS.md).
 ```
 NOXIS/
 ├── index.html
+├── sitemap.xml            # sitemap para Google Search Console
 ├── css/
 │   ├── global.css
 │   ├── components.css

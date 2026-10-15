@@ -58,6 +58,10 @@ Fotografía del proyecto en el momento de redactar este documento. El código es
 - Sitio: GitHub → Cloudflare Workers (**deploy automático al push a `main`**).
 - Worker: deploy manual con `wrangler` (ver [DEPLOY.md](DEPLOY.md)).
 
+### Indexación / SEO
+- **Google Search Console**: verificación por meta etiqueta (`google-site-verification` en `index.html`) y `sitemap.xml` en la raíz con la URL pública.
+- El sitio es una SPA de una sola URL (`/`), por lo que el sitemap contiene una única entrada.
+
 ---
 
 ## En progreso

@@ -122,6 +122,7 @@ Detalle completo, URLs, verificaciones y rollback en [DEPLOY.md](DEPLOY.md).
 - **Portadas/galería**: `assets/images/games/<id>/portada.jpg` y `complementaria-N.jpg`.
 - **Logo de marca**: `assets/images/logo.webp` (generado desde `Logo1.png`, recortado, fondo transparente; en el header se muestra cuadrado con `object-fit: cover`).
 - **Favicon**: `assets/images/favicon-32.png` y `assets/images/apple-touch-icon.png` (declarados en `index.html`).
+- **Indexación / SEO**: meta de verificación de Google Search Console en `index.html` + `sitemap.xml` en la raíz (una URL, `/`).
 - **Flujo para cargar un juego**: [AGREGAR-JUEGO.md](AGREGAR-JUEGO.md). **Material crudo**: `Contenedor de juegos/<Nombre>/` (gitignored).
 
 ## 11. Errores conocidos que no debés reintroducir
