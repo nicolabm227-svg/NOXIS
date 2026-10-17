@@ -252,6 +252,8 @@ e2e_home11.js, verify_data.js). n
 11. HISTORIAL DE CAMBIOS (CRONOLÓGICO)
 --------------------------------------------------------------------------------
 Commits previos en main (más nuevo primero):
+  513ffa7  Home: quita "Más populares" (redundante) y ordena "Destacados" por popularidad
+  6099a43  Agrega 5 juegos nuevos (GTA V, Witcher 3, TLOU I, Gears E-Day, LN III) + orbes y typewriter + docs (43 archivos)
   08d12e4  Agrega soporte de DLC en la ficha del juego
   589ef03  Agrega verificacion de Google Search Console y sitemap
   98fa924  Agrega Diablo II Resurrected - Infernal Edition al catalogo
@@ -259,27 +261,29 @@ Commits previos en main (más nuevo primero):
   72801a3  Reemplaza el icono de marca por un logo de imagen y actualiza la documentacion
   7f3c28b  Agrega chip de tamano en las tarjetas y documenta despliegue en Cloudflare
   d934b42  Agrega analitica de trafico y ranking por interacciones
-  6099a43  Agrega 5 juegos nuevos (GTA V, Witcher 3, TLOU I, Gears E-Day, LN III) + orbes y typewriter + docs (43 archivos)
   8442c3c  Fix header responsive en movil y actualiza enlace de UltraISO
 
-CAMBIO EN CURSO (aún sin commit al escribir esto): se eliminó la sección
-"Más populares" de la Home (era redundante con "Destacados", que ahora se ordena
-por POPULARIDAD real) y se quitó el corte a 8 en los `select`, para que la Home
-reparta los 11 juegos (6 + 5). Toca: js/data.js, index.html (?v=32 -> ?v=33) y docs.
-
-Trabajo ya commiteado en 6099a43 (sesión previa):
+Tanda 6099a43 (sesión previa):
   A) Fondo de orbes (js/orbs.js, css/global.css) y efecto de escritura
      (js/typewriter.js, css/home.css, js/home.js, js/explore.js).
   B) 5 juegos nuevos cargados (assets + js/data.js).
   C) Cache-busting ?v=31 -> ?v=32.
   D) Actualización de la documentación y este .txt.
 
+Tanda 513ffa7 (esta sesión): se eliminó la sección "Más populares" de la Home
+(era redundante con "Destacados", que ahora se ordena por POPULARIDAD real —
+descargas/interacciones del Worker, con fallback estático) y se quitó el corte a 8
+en los `select`, para que la Home reparta los 11 juegos (6 + 5). Toca: js/data.js,
+index.html (?v=32 -> ?v=33) y docs (CHANGELOG, PROJECT_STATUS, ARCHITECTURE,
+README, DEVELOPMENT, DEPLOY, DECISIONS #19, AGREGAR-JUEGO y este .txt).
+
 Detalle de lo agregado en esta tanda:
   - 5 juegos nuevos: Gears of War: E-Day — Premium Edition, Grand Theft Auto V,
     Little Nightmares III, The Last of Us Part I, The Witcher 3: Wild Hunt —
     Remastered. Assets en assets/images/games/<id>/ (portada + complementarias),
     objetos en js/data.js (descripción, requisitos, ficha, enlaces, galería y DLC).
-  - Reorden del array: los 5 nuevos van primero para encabezar "Destacados".
+  - Array de juegos: el orden del array ya NO define "Destacados" (ahora se
+    ordena por popularidad); se mantiene como orden por defecto de Explorar.
 
 
 --------------------------------------------------------------------------------
