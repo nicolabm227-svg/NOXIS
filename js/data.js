@@ -606,14 +606,15 @@
   };
 
   /* Configuración de las secciones de la Home.
-     Cada sección define cómo se seleccionan los juegos. */
+     Cada sección define cómo se seleccionan los juegos.
+     "Destacados" = juegos marcados con `featured`, ordenados por popularidad
+     (descargas/interacciones reales del backend; `popular` estático de respaldo).
+     Se eliminó la sección "Más populares" por ser redundante con este orden. */
   const sections = [
     { key: "featured", heading: "Destacados",
-      select: (list) => list.filter((g) => g.featured).slice(0, 8) },
+      select: (list) => [...list].filter((g) => g.featured).sort(comparePopular) },
     { key: "new", heading: "Nuevos",
-      select: (list) => [...list].sort((a, b) => b.year - a.year).slice(0, 8) },
-    { key: "popular", heading: "Más populares",
-      select: (list) => [...list].sort(comparePopular).slice(0, 8) },
+      select: (list) => [...list].sort((a, b) => b.year - a.year) },
   ];
 
   /* Utilidades pequeñas de orden. */
@@ -658,7 +659,7 @@
     },
 
     /* Carriles de la Home sin repetir juegos: cada sección aporta su
-       propia selección (destacados, más nuevos, más populares) y toma los
+       propia selección (destacados por popularidad, más nuevos) y toma los
        primeros que aún no aparecieron arriba. El tamaño por sección se
        adapta al catálogo (máx. 8) para que todas tengan contenido aunque
        la biblioteca sea chica, y se omiten las secciones vacías. */

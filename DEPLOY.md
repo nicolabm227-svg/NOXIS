@@ -96,14 +96,14 @@ curl -X POST https://noxis-rank.nicolabarranco2.workers.dev/event ^
 ## 6. Ranking por interacciones
 
 - El front (`js/analytics.js`) envía eventos `open` / `download` / `purchase` al Worker.
-- `NOXIS.Data.init()` lee `GET /popular` y reordena "Más populares" y el orden "populares" de Explorar.
+- `NOXIS.Data.init()` lee `GET /popular` y reordena *Destacados* (y el orden "populares" de Explorar).
 - El score y los pesos viven en `worker/index.js` (ver [ARCHITECTURE.md](ARCHITECTURE.md)).
 
 ## 7. Cache-busting
 
-El sitio referencia CSS/JS con `?v=N` (hoy `v=32`) para forzar la recarga en navegadores que tengan versiones viejas en caché.
+El sitio referencia CSS/JS con `?v=N` (hoy `v=33`) para forzar la recarga en navegadores que tengan versiones viejas en caché.
 
-- **Cada vez que cambies un `.css` o `.js`, subí el número** en `index.html` (`?v=32`, `?v=33`, …).
+- **Cada vez que cambies un `.css` o `.js`, subí el número** en `index.html` (`?v=33`, `?v=34`, …).
 - Si solo cambia `js/data.js` (agregar juegos), igual conviene subir la versión.
 
 ## 8. Entorno (Windows)

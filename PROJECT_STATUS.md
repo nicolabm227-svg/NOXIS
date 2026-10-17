@@ -23,7 +23,7 @@ Fotografía del proyecto en el momento de redactar este documento. El código es
 
 ### Home
 - **Encabezado con efecto de escritura**: eyebrow, título y subtítulo se escriben letra a letra al entrar (`js/typewriter.js`, con cursor parpadeante; se omite con `prefers-reduced-motion`).
-- Tres secciones: *Destacados* (featured), *Nuevos* (más recientes), *Más populares* (orden por popularidad).
+- Dos secciones: *Destacados* (juegos `featured`, ordenados por popularidad —descargas/interacciones con fallback estático) y *Nuevos* (más recientes). Se quitó *Más populares* por redundante.
 - **Sin juegos repetidos** entre secciones; las secciones vacías se ocultan.
 - Buscador global (reordena *Destacados*) y botones "Ver todo" que **heredan el orden** de su sección en Explorar.
 - Tarjetas con aparición progresiva y escalonada (`IntersectionObserver` + `--i`).
@@ -58,7 +58,7 @@ Fotografía del proyecto en el momento de redactar este documento. El código es
 ### Analítica y ranking (backend)
 - **`NOXIS.Analytics`** (`js/analytics.js`): envía eventos anónimos `open`/`download`/`purchase` al Worker vía `sendBeacon`; inactivo en local (`file:`/`localhost`).
 - **Worker `noxis-rank`** (Cloudflare + KV `NOXIS_EVENTS`): endpoints `POST /event` y `GET /popular`.
-- **Popularidad dinámica**: `NOXIS.Data.init()` lee `/popular` y reordena "Más populares" y el orden "populares" de Explorar; fallback al campo estático `popular`.
+- **Popularidad dinámica**: `NOXIS.Data.init()` lee `/popular` y reordena *Destacados* y el orden "populares" de Explorar; fallback al campo estático `popular`.
 - **Analítica de tráfico**: Cloudflare Web Analytics (visitas/páginas/referrers) en el dashboard.
 
 ### Despliegue

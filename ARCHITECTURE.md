@@ -80,7 +80,7 @@ Módulo `data.js` que encierra en memoria:
 
 - `games`: array de **11 juegos reales**.
 - `tools`: array de 5 herramientas con URL externa.
-- `sections`: configuración de las 3 secciones de la Home (función `select` sobre `games`).
+- `sections`: configuración de las 2 secciones de la Home (función `select` sobre `games`).
 - `popularity`: mapa `{ gameId: score }` cargado del backend (o `null` si no se cargó).
 
 API pública:
@@ -98,7 +98,7 @@ API pública:
 
 El orden "popular" usa `comparePopular`: ordena por `popularity[gameId]` (score dinámico) con desempate por el campo estático `popular`; si no hay datos, usa solo el campo estático.
 
-`getSections()` arma los **carriles de la Home sin repetir juegos**: cada sección aporta su propia selección (destacados / más nuevos / más populares) y toma los primeros que aún no aparecieron arriba. El tamaño por sección se adapta al catálogo (máx. 8) para que todas tengan contenido aunque la biblioteca sea chica, y las secciones vacías se omiten (la vista las oculta).
+`getSections()` arma los **carriles de la Home sin repetir juegos**: cada sección aporta su propia selección (destacados —ordenados por popularidad— / más nuevos) y toma los primeros que aún no aparecieron arriba. El tamaño por sección se adapta al catálogo (máx. 8) para que todas tengan contenido aunque la biblioteca sea chica, y las secciones vacías se omiten (la vista las oculta).
 
 ## Renderizado
 

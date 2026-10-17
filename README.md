@@ -19,7 +19,7 @@ Además del front, cuenta con un **backend mínimo** (un Cloudflare Worker + KV)
 
 ## Características principales actuales
 
-- **Home** con tres secciones: *Destacados*, *Nuevos* y *Más populares* (esta última ordenada por interacciones reales), más un buscador global.
+- **Home** con dos secciones: *Destacados* (ordenada por interacciones reales) y *Nuevos*, más un buscador global.
 - **Explorar** con filtros (categoría, género, sistema operativo, año), ordenamiento (recientes/populares/A-Z), paginación y panel de **Herramientas**.
 - **Ventana individual del juego** (overlay) con portada, descripción, pestañas *Información / Requisitos / Galería* y botones *Descargar* / *Comprar* (enlaces externos).
 - **`NOXIS.Data`** como capa única de acceso a datos (con popularidad dinámica y fallback estático).

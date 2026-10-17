@@ -13,7 +13,7 @@
 --------------------------------------------------------------------------------
 NOXIS es un CATÁLOGO DE JUEGOS para PC, estático (HTML + CSS + JavaScript puro,
 sin build, sin framework, sin base de datos). Muestra los juegos en una Home con
-carriles ("Destacados", "Nuevos", "Más populares"), una vista "Explorar" con
+carriles ("Destacados" —ordenado por popularidad— y "Nuevos"), una vista "Explorar" con
 filtros y búsqueda, y una "ventana de juego" tipo overlay con descripción,
 requisitos, galería, DLC y enlaces de descarga/compra.
 
@@ -68,7 +68,7 @@ NOXIS.Data (js/data.js):
   - init()                 Carga popularidad desde el Worker (solo en producción;
                            en local se omite). Reordena con fallback estático.
   - getAllGames()          Array completo de juegos.
-  - getSectionGames(key)   Juegos de una sección (featured|new|popular).
+  - getSectionGames(key)   Juegos de una sección (featured|new).
   - getSections()          Carriles de la Home SIN repetir juegos; adapta el
                            tamaño por sección (máx. 8) y omite las vacías.
   - searchGames(query)     Búsqueda por título/categoría/género/subtítulo.
@@ -140,11 +140,13 @@ CATÁLOGO ACTUAL (11 juegos, en el ORDEN del array):
  10) rise-of-nations-extended-edition   Rise of Nations: Extended Edition     Estrategia / Estrategia en tiempo real 2014  1.20 GB   DLC 1
  11) diablo-ii-resurrected              Diablo II: Resurrected — Infernal Ed. Acción     / RPG de acción               2021  31.5 GB   DLC 1
 
-NOTA DE ORDEN: los 5 juegos nuevos se colocaron PRIMERO en el array para que
-ocupen "Destacados" (que toma los primeros `featured`). Con 11 juegos, la Home
-reparte hasta 4 por sección y evita repetir, así que algunos juegos pueden no
-aparecer en la Home pero SÍ están en Explorar (los 11). Destacados actual:
-GTA V, The Witcher 3, The Last of Us Part I, Gears of War: E-Day.
+NOTA DE ORDEN: "Destacados" ya NO respeta el orden del array: toma todos los
+juegos `featured` y los ordena por POPULARIDAD (score real del Worker —
+descargas/interacciones—, con fallback al campo estático `popular`). "Nuevos"
+ordena por año. La Home deduplica entre secciones: con 11 juegos y 2 secciones
+(se quitó "Más populares" por redundante) reparte 6 + 5 y muestra los 11 en total.
+Destacados actual (por popularidad): GTA V, Red Dead Redemption 2, Cyberpunk 2077,
+God of War, The Witcher 3, The Last of Us Part I.
 
 
 --------------------------------------------------------------------------------
@@ -203,9 +205,9 @@ e2e_home11.js, verify_data.js). n
 --------------------------------------------------------------------------------
 7. VERSIONADO Y CACHE-BUSTING
 --------------------------------------------------------------------------------
-- index.html referencia CSS/JS con ?v=N (16 ocurrencias). VALOR ACTUAL: ?v=32.
-- Al tocar CUALQUIER .css o .js, subir el número (buscar/reemplazar ?v=32 por
-  ?v=33, etc.) para forzar recarga en navegadores con caché vieja.
+- index.html referencia CSS/JS con ?v=N (16 ocurrencias). VALOR ACTUAL: ?v=33.
+- Al tocar CUALQUIER .css o .js, subir el número (buscar/reemplazar ?v=33 por
+  ?v=34, etc.) para forzar recarga en navegadores con caché vieja.
 
 
 --------------------------------------------------------------------------------
@@ -257,14 +259,20 @@ Commits previos en main (más nuevo primero):
   72801a3  Reemplaza el icono de marca por un logo de imagen y actualiza la documentacion
   7f3c28b  Agrega chip de tamano en las tarjetas y documenta despliegue en Cloudflare
   d934b42  Agrega analitica de trafico y ranking por interacciones
+  6099a43  Agrega 5 juegos nuevos (GTA V, Witcher 3, TLOU I, Gears E-Day, LN III) + orbes y typewriter + docs (43 archivos)
   8442c3c  Fix header responsive en movil y actualiza enlace de UltraISO
 
-Trabajo LOCAL pendiente de commit (esta sesión + sesión anterior):
+CAMBIO EN CURSO (aún sin commit al escribir esto): se eliminó la sección
+"Más populares" de la Home (era redundante con "Destacados", que ahora se ordena
+por POPULARIDAD real) y se quitó el corte a 8 en los `select`, para que la Home
+reparta los 11 juegos (6 + 5). Toca: js/data.js, index.html (?v=32 -> ?v=33) y docs.
+
+Trabajo ya commiteado en 6099a43 (sesión previa):
   A) Fondo de orbes (js/orbs.js, css/global.css) y efecto de escritura
      (js/typewriter.js, css/home.css, js/home.js, js/explore.js).
   B) 5 juegos nuevos cargados (assets + js/data.js).
   C) Cache-busting ?v=31 -> ?v=32.
-  D) Actualización de toda la documentación (contraseña de cambios) y este .txt.
+  D) Actualización de la documentación y este .txt.
 
 Detalle de lo agregado en esta tanda:
   - 5 juegos nuevos: Gears of War: E-Day — Premium Edition, Grand Theft Auto V,
@@ -284,6 +292,12 @@ Detalle de lo agregado en esta tanda:
 - Typewriter: se corrigió el destello inicial ocultando las letras al cargar el
   módulo y sincronizando el arranque con el loader. Luego se generalizó a
   Explorar (scope-aware) en vez de duplicar código.
+- Home: se eliminó la sección "Más populares" por ser redundante con "Destacados"
+  (todos los juegos son `featured` y el dedupe dejaba ese carril con 1 tarjeta).
+  "Destacados" ahora se ordena por POPULARIDAD (descargas/interacciones del Worker,
+  con fallback al `popular` estático) y se quitó el `slice(0, 8)` de los `select`
+  para que `getSections()` reparta los 11 juegos (6 + 5). El buscador sigue
+  reordenando "Destacados".
 - Nombres de imágenes del contenedor varían (Portada/PORTADA, "imagen 1",
   "complementaria1", "complementarai4" (typo), "imagen1 .webp" con espacio):
   se normalizan SIEMPRE al copiar.

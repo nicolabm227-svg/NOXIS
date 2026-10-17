@@ -152,7 +152,8 @@ Dentro del array `games` (ver el objeto de `cyberpunk-2077` como modelo), agreg�
 - **Presentación**: `id`, `title`, `cover`, `sub`.
 - **Filtros (Explorar)**: `category`, `genre`, `os`, `year`.
 - **Orden**: `popular` (fallback), `year`, `rating`.
-- **Home**: `featured` (sección "Destacados").
+- **Home**: `featured` (incluye el juego en la sección "Destacados", que se ordena por popularidad).
+- **Orden de la Home**: `Destacados` = `featured` por popularidad; `Nuevos` = por año. `popular` es el fallback estático cuando el Worker no responde.
 - **Ventana del juego**: `description`, `specs`, `requirements`, `gallery`, `links`, `dlc` (opcional).
 
 > Todo bloque es opcional: si falta (`links`, `requirements`, `gallery`), la ventana **degrada con elegancia** (botones deshabilitados, "próximamente"). Pero completá lo máximo posible.

@@ -67,7 +67,7 @@ Revisar que todos los recursos referenciados existan (CSS, JS, imágenes). Las p
 ## Probar la Home
 
 1. Al cargar, el loader se oculta y se muestra la Home.
-2. Verificar las secciones *Destacados*, *Nuevos*, *Más populares* con tarjetas.
+2. Verificar las secciones *Destacados* (ordenada por popularidad) y *Nuevos* con tarjetas.
 3. Escribir en el buscador global: la sección *Destacados* se reordena con los resultados.
 4. Clic en "Ver todo" → navega a Explorar.
 

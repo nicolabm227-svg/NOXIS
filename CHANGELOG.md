@@ -8,7 +8,7 @@ Registro del estado conocido y la evolución del proyecto. No se dispone de fech
 
 ### Estado actual
 
-- **Home**: tres secciones (Destacados, Nuevos, Más populares), buscador global, tarjetas con aparición progresiva, botones "Ver todo".
+- **Home**: dos secciones (Destacados y Nuevos), buscador global, tarjetas con aparición progresiva, botones "Ver todo".
 - **Explorar**: filtros (categoría, género, sistema operativo, año), ordenamiento (recientes/populares/A-Z), paginación (12 por página), contador, "Limpiar filtros".
 - **Herramientas**: enlaces externos (WinRAR, UltraISO, DAEMON Tools, qBittorrent, µTorrent) en pestaña nueva con `rel="noopener noreferrer"`.
 - **Ventana del juego (overlay)**: marco tipo ventana de escritorio, tres puntos de control, portada 2:3, descripción real, pestañas (Información/Requisitos/Galería), botones Descargar y Comprar que abren enlaces externos.
@@ -16,6 +16,8 @@ Registro del estado conocido y la evolución del proyecto. No se dispone de fech
 - **Datos**: `NOXIS.Data` con 11 juegos reales (descripción, requisitos, ficha técnica, enlaces y galería) y 5 herramientas.
 
 ### Cambios recientes
+
+- **Home: se elimina "Más populares" y "Destacados" se ordena por popularidad**: *Más populares* era redundante con *Destacados* (todos los juegos tienen `featured: true` y el dedupe dejaba ese carril con una sola tarjeta). Ahora la Home tiene **dos secciones**: *Destacados* (todos los `featured`, ordenados por popularidad real —descargas/interacciones— con fallback al campo estático `popular`) y *Nuevos* (por año). Se quitó el corte a 8 dentro de cada `select`, así el reparto sin repetidos muestra los **11** juegos (6 + 5). `?v=` subido a `33`.
 
 - **5 juegos nuevos**: se agregaron **Gears of War: E-Day — Premium Edition** (2026), **Grand Theft Auto V** (2015), **Little Nightmares III** (2025), **The Last of Us Part I** (2023) y **The Witcher 3: Wild Hunt — Remastered** (2026). Assets en `assets/images/games/<id>/` + objetos en `js/data.js` (descripción, requisitos, ficha, enlaces, galería y DLC; GTA V sin requisitos por no estar en su ficha). El catálogo pasa de 6 a **11 juegos**. DLC cargados: Gears (7), Little Nightmares III (8), The Last of Us Part I (2), The Witcher 3 (5); GTA V sin `dlc`. `?v=` subido a `32`.
 

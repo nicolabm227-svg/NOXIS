@@ -94,6 +94,12 @@ La marca del header (`NOXIS`) usa una **imagen** (`assets/images/logo.webp`) en 
 
 Motivo: dar identidad visual propia al proyecto e integrar la marca con la UI oscura (sin el marco/fondo claros del archivo original).
 
+## 19. Home de dos secciones: "Destacados" ordenado por popularidad
+
+La Home tenía tres carriles (*Destacados*, *Nuevos*, *Más populares*) que se solapaban: como todos los juegos son `featured`, el dedupe de `getSections()` dejaba *Más populares* con una sola tarjeta y ambos carriles mostraban casi lo mismo. Se eliminó *Más populares* y *Destacados* pasó a **ordenarse por popularidad** (score real del Worker —descargas/interacciones—, con fallback al campo estático `popular`). También se quitó el corte `slice(0, 8)` dentro de cada `select` para que el reparto sin repetidos cubra los 11 juegos (6 + 5).
+
+Motivo: cada carril tiene un rol distinto (popularidad vs. novedad) sin duplicar juegos, y la Home muestra el catálogo completo sin una sección "fantasma" de un solo ítem.
+
 ## Decisiones NO tomadas (rechazadas por ahora)
 
 - **Framework JS** (React/Vue/Svelte): rechazado; se mantiene vanilla.
