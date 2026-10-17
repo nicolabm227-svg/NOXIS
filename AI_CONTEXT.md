@@ -21,8 +21,10 @@ Estado real: es front-end **más un backend mínimo y opcional** para el ranking
   4. `home.js` → **`NOXIS.Home`** (render Home) + define `NOXIS.RouterHooks`.
   5. `explore.js` → **`NOXIS.Explore`** (filtros/paginación) + encadena `RouterHooks`.
   6. `game.js` → **`NOXIS.Game`** (ventana overlay del juego).
-- CSS: `global.css` (tokens), `components.css` (header/tarjetas/loader), `home.css`, `explore.css`, `game.css`.
-- Datos: `js/data.js` contiene arrays `games` (**6 juegos reales**) y `tools` (5), en memoria.
+  7. `orbs.js` → sin namespace: genera los orbes del fondo (idénticos) y aplica su parallax.
+  8. `typewriter.js` → **`NOXIS.Typewriter`**: efecto de escritura de los encabezados (Inicio y Explorar), llamado por `home.js`/`explore.js`.
+- CSS: `global.css` (tokens + orbes del fondo), `components.css` (header/tarjetas/loader), `home.css`, `explore.css`, `game.css`.
+- Datos: `js/data.js` contiene arrays `games` (**11 juegos reales**) y `tools` (5), en memoria.
 - Backend: `worker/index.js` (Cloudflare Worker) + KV `NOXIS_EVENTS`. Endpoints `POST /event` y `GET /popular`.
 
 ## 3. REGLAS FUNDAMENTALES
@@ -114,11 +116,11 @@ Detalle completo, URLs, verificaciones y rollback en [DEPLOY.md](DEPLOY.md).
 - **Analítica (front)**: `js/analytics.js` (`NOXIS.Analytics`, `WORKER_URL`).
 - **Datos**: `js/data.js` (`games`, `tools`, `popularity`, `Data`).
 - **Navegación**: `js/app.js`.
-- **Home**: `js/home.js` + `css/home.css`.
+- **Home**: `js/home.js` + `css/home.css`. El encabezado usa efecto de escritura (`js/typewriter.js`, `NOXIS.Typewriter.play(vista)`, llamado desde `Home.init` y `Explore.init`).
 - **Explorar**: `js/explore.js` + `css/explore.css`.
 - **Ventana del juego**: `js/game.js` + `css/game.css`. Pestañas: Información (ficha técnica + bloque **DLC** si el juego tiene `dlc`), Requisitos, Galería.
 - **Backend de ranking**: `worker/index.js` + `worker/wrangler.toml`.
-- **Componentes compartidos**: `css/components.css`. **Tokens/paleta**: `css/global.css`.
+- **Componentes compartidos**: `css/components.css`. **Tokens/paleta**: `css/global.css`. **Fondo de orbes**: `.orbs` en `css/global.css` + `js/orbs.js` (parallax).
 - **Portadas/galería**: `assets/images/games/<id>/portada.jpg` y `complementaria-N.jpg`.
 - **Logo de marca**: `assets/images/logo.webp` (generado desde `Logo1.png`, recortado, fondo transparente; en el header se muestra cuadrado con `object-fit: cover`).
 - **Favicon**: `assets/images/favicon-32.png` y `assets/images/apple-touch-icon.png` (declarados en `index.html`).

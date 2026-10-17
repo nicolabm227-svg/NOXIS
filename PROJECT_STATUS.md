@@ -16,13 +16,20 @@ Fotografía del proyecto en el momento de redactar este documento. El código es
 - Botón **"Volver arriba"** flotante (`#back-to-top`), visible tras 600 px de scroll.
 - **Accesibilidad**: foco de teclado visible (`:focus-visible`), navegación por Tab, `aria-*` en vistas/overlay, y áreas táctiles ≥44 px en punteros gruesos.
 
+### Fondo dinámico
+- Capa fija global (`.orbs` en `global.css`) con **40 orbes idénticos** (mismo tamaño 7px, mismo color y brillo del acento) que ascienden con vaivén, visibles en Inicio y Explorar y por detrás del contenido. Los genera `js/orbs.js`; solo varían posición y tempo.
+- Solo `transform`/`opacity` (sin `filter: blur`); estáticos con `prefers-reduced-motion`; reducidos en móvil (`≤640px`).
+- **Parallax** sutil con el puntero (`js/orbs.js`, ±16px; solo punteros finos).
+
 ### Home
+- **Encabezado con efecto de escritura**: eyebrow, título y subtítulo se escriben letra a letra al entrar (`js/typewriter.js`, con cursor parpadeante; se omite con `prefers-reduced-motion`).
 - Tres secciones: *Destacados* (featured), *Nuevos* (más recientes), *Más populares* (orden por popularidad).
 - **Sin juegos repetidos** entre secciones; las secciones vacías se ocultan.
 - Buscador global (reordena *Destacados*) y botones "Ver todo" que **heredan el orden** de su sección en Explorar.
 - Tarjetas con aparición progresiva y escalonada (`IntersectionObserver` + `--i`).
 
 ### Explorar
+- **Cabecera con efecto de escritura**: eyebrow, título y subtítulo se escriben letra a letra al entrar (`js/typewriter.js`).
 - Filtros por **categoría**, **género**, **sistema operativo** y **año** (píldoras), con acordeón.
 - Ordenamiento: *Más recientes / Más populares / A-Z* (y el heredado desde "Ver todo").
 - Paginación (12 por página), contador, "Limpiar filtros" y **estado vacío** cuando no hay coincidencias.
@@ -44,7 +51,7 @@ Fotografía del proyecto en el momento de redactar este documento. El código es
 - **Foco gestionado**: se enfoca la ventana al abrir, el `Tab` queda atrapado dentro y el foco vuelve al elemento que la abrió al cerrar.
 
 ### Fuente de datos
-- `NOXIS.Data` con **6 juegos reales** y 5 herramientas.
+- `NOXIS.Data` con **11 juegos reales** y 5 herramientas.
 - Estructura rica por juego: `description`, `requirements`, `specs`, `links`, `gallery`, `dlc` (opcional) (ver [ARCHITECTURE.md](ARCHITECTURE.md#estructura-de-un-juego)).
 - API: `init`, `getAllGames`, `getSectionGames`, `getSections`, `searchGames`, `getFacets`, `getTools`, `filterGames`.
 
@@ -96,7 +103,7 @@ Limitaciones reales detectadas en el código.
 - El Worker `noxis` (antiguo, `noxis.nicolabarranco2.workers.dev`) sigue existiendo pero **no se usa**.
 
 **Datos temporales**
-- 6 juegos reales cargados desde `Contenedor de juegos/`.
+- 11 juegos reales cargados desde `Contenedor de juegos/`.
 - Los `assets/images/cover-*.svg` (30) son huérfanos: ya no los referencia `data.js`.
 
 ---
@@ -124,7 +131,7 @@ Limitaciones reales detectadas en el código.
 
 ## Checklist de "estado sano"
 
-- [ ] `node --check` pasa en `js/data.js`, `app.js`, `home.js`, `explore.js`, `game.js`, `analytics.js`.
+- [ ] `node --check` pasa en `js/data.js`, `app.js`, `home.js`, `explore.js`, `game.js`, `analytics.js`, `orbs.js`, `typewriter.js`.
 - [ ] El sitio en vivo carga y la consola no tiene errores.
 - [ ] `GET https://noxis-rank.nicolabarranco2.workers.dev/popular` responde JSON.
 - [ ] Un clic en una tarjeta genera `POST /event` (visible en DevTools → Network).

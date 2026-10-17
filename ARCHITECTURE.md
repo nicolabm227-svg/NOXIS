@@ -16,22 +16,24 @@ Este documento describe la arquitectura técnica real del proyecto. Es más téc
   index.html  (estructura estática + contenedores)
        |
        v
-  CSS (5 archivos)                    JS (6 módulos)
+  CSS (5 archivos)                    JS (8 módulos)
   ----------------                    --------------------
-  global.css      tokens              analytics.js  envío de eventos (Worker)
+  global.css      tokens + orbes      analytics.js  envío de eventos (Worker)
   components.css  header/loader/tarjeta  data.js    fuente de datos
   home.css        estilos Home        app.js        router / núcleo
   explore.css     estilos Explorar    home.js       render Home
   game.css        estilos ventana     explore.js    filtros/paginación
                                       game.js       ventana del juego
+                                      orbs.js       orbes + parallax
+                                      typewriter.js escritura de encabezados
 
   Backend (Cloudflare):  worker/index.js  ──►  KV "NOXIS_EVENTS"
 ```
 
 ## Flujo de arranque
 
-1. El navegador carga `index.html`, que incluye los 5 CSS y los **6 JS** (en orden: `analytics.js`, `data.js`, `app.js`, `home.js`, `explore.js`, `game.js`), todos con `?v=N`.
-2. Cada módulo JS se registra en `window.NOXIS`.
+1. El navegador carga `index.html`, que incluye los 5 CSS y los **8 JS** (en orden: `analytics.js`, `data.js`, `app.js`, `home.js`, `explore.js`, `game.js`, `orbs.js`, `typewriter.js`), todos con `?v=N`.
+2. Cada módulo JS se registra en `window.NOXIS`. Dos son autónomos: `orbs.js` (crea los orbes del fondo y su parallax; sin API) y `typewriter.js` (expone `NOXIS.Typewriter.play(vista)`, que `home.js` y `explore.js` invocan al mostrar cada vista).
 3. Al dispararse `DOMContentLoaded`, se ejecuta `window.NOXIS.App.init()`.
 4. `App.init()` cachea el DOM, enlaza eventos, oculta el loader, muestra la ruta `home` y llama a `NOXIS.Data.init()` (carga asíncrona de popularidad).
 5. El router invoca `NOXIS.RouterHooks(route, state)`, encadenado por `home.js` y `explore.js`.
@@ -76,7 +78,7 @@ Este documento describe la arquitectura técnica real del proyecto. Es más téc
 
 Módulo `data.js` que encierra en memoria:
 
-- `games`: array de **6 juegos reales**.
+- `games`: array de **11 juegos reales**.
 - `tools`: array de 5 herramientas con URL externa.
 - `sections`: configuración de las 3 secciones de la Home (función `select` sobre `games`).
 - `popularity`: mapa `{ gameId: score }` cargado del backend (o `null` si no se cargó).
@@ -250,7 +252,7 @@ Flujo conceptual: detección (scan del filesystem/Storage) → validación (`dat
 
 ## Separación de responsabilidades (resumen)
 
-- `index.html`: esqueleto estático y contenedores (loader, header, vistas, overlay del juego, backdrop). Incluye la meta de verificación de Google Search Console.
+- `index.html`: esqueleto estático y contenedores (loader, header, vistas, overlay del juego, backdrop, capa de orbes del fondo). Incluye la meta de verificación de Google Search Console.
 - `sitemap.xml` (raíz): sitemap para indexación en Google (una URL: `/`).
 - `analytics.js`: envío anónimo de eventos al Worker de ranking.
 - `data.js`: única fuente de datos + popularidad dinámica.
@@ -258,5 +260,7 @@ Flujo conceptual: detección (scan del filesystem/Storage) → validación (`dat
 - `home.js`: render y búsqueda de la Home.
 - `explore.js`: filtros, ordenamiento, paginación, herramientas.
 - `game.js`: overlay de la ventana del juego.
+- `orbs.js`: genera los orbes del fondo (idénticos entre sí) y aplica el parallax de la capa (autónomo, sin namespace).
+- `typewriter.js`: efecto de escritura de los encabezados de Inicio y Explorar (`NOXIS.Typewriter.play(vista)`, autónomo salvo esa API).
 - `worker/index.js`: backend de ranking (Cloudflare Worker + KV).
-- CSS: `global` (tokens/base), `components` (header/loader/tarjetas), `home`, `explore`, `game`.
+- CSS: `global` (tokens/base + orbes del fondo), `components` (header/loader/tarjetas), `home`, `explore`, `game`.

@@ -1,6 +1,6 @@
 /* ============================================================
    NOXIS — data.js
-   Fuente de datos local (5 juegos reales cargados desde
+   Fuente de datos local (11 juegos reales cargados desde
    "Contenedor de juegos" + 5 herramientas).
    IMPORTANTE: Esta capa es la única que consulta los datos.
    En el futuro, sustituir la implementación por datos de
@@ -12,6 +12,263 @@
   "use strict";
 
   const games = [
+    /* ── Juegos nuevos (destacados) ── */
+    {
+      id: "grand-theft-auto-v",
+      title: "Grand Theft Auto V",
+      category: "Acción",
+      genre: "Aventura de mundo abierto",
+      os: ["Windows"],
+      year: 2015,
+      popular: 98,
+      rating: 9.5,
+      featured: true,
+      sub: "Aventura de mundo abierto · 2015",
+      cover: "assets/images/games/grand-theft-auto-v/portada.jpg",
+      description:
+        "Cuando un joven estafador callejero, un ladrón de bancos retirado y un psicópata aterrador se ven involucrados con lo peor y más desquiciado del mundo criminal, del gobierno de los EE. UU. y de la industria del espectáculo, tendrán que llevar a cabo una serie de peligrosos golpes para sobrevivir en una ciudad implacable en la que no pueden confiar en nadie.",
+      specs: {
+        plataforma: "PC",
+        idiomaTextos: "Español, Inglés, Francés, Italiano, Portugués (Brasil), Alemán, Ruso, Polaco, Chino",
+        idiomaVoces: "Inglés",
+        anio: "2015",
+        tamano: "45 GB",
+        formato: "ISO",
+        genero: "Acción, Aventura, Mundo Abierto",
+      },
+      links: {
+        download: "https://www.mediafire.com/file/ckuw8fpi8pc5tw2/grandtheftav-v3717-87.torrent/file",
+        purchase: "https://store.steampowered.com/agecheck/app/271590/",
+      },
+      gallery: [
+        "assets/images/games/grand-theft-auto-v/complementaria-1.webp",
+        "assets/images/games/grand-theft-auto-v/complementaria-2.jpg",
+        "assets/images/games/grand-theft-auto-v/complementaria-3.webp",
+        "assets/images/games/grand-theft-auto-v/complementaria-4.webp",
+      ],
+    },
+    {
+      id: "the-witcher-3-wild-hunt",
+      title: "The Witcher 3: Wild Hunt — Remastered",
+      category: "RPG",
+      genre: "RPG de mundo abierto",
+      os: ["Windows"],
+      year: 2026,
+      popular: 93,
+      rating: 9.6,
+      featured: true,
+      sub: "RPG de mundo abierto · 2026",
+      cover: "assets/images/games/the-witcher-3-wild-hunt/portada.jpg",
+      description:
+        "Convertite en Geralt de Rivia, un brujo cazador de monstruos que recorre un continente devastado por la guerra, donde la magia, la intriga política y las viejas supersticiones se entrelazan. En The Witcher 3: Wild Hunt, cada contrato esconde sus propios peligros y cada decisión puede cambiar el destino de quienes te rodean. Explorá un mundo inmenso, enfrentá criaturas aterradoras y perseguí a la Cacería Salvaje en una aventura donde no siempre existe una elección correcta.",
+      requirements: {
+        min: {
+          os: "Windows 11 64-bit",
+          cpu: "Intel Core i5-8400 / AMD Ryzen 5 2600",
+          ram: "12 GB",
+          gpu: "NVIDIA GeForce GTX 1660 / AMD Radeon RX 5500 XT 8 GB / Intel Arc A580",
+          storage: "60 GB libres",
+        },
+        rec: {
+          os: "Windows 11 64-bit",
+          cpu: "Intel Core i7-8700K / AMD Ryzen 5 3600X",
+          ram: "16 GB",
+          gpu: "NVIDIA GeForce RTX 2060 Super / AMD Radeon RX 6600 XT / Intel Arc B580",
+          storage: "60 GB libres",
+        },
+      },
+      specs: {
+        plataforma: "PC",
+        idiomaTextos: "Español, Inglés, Italiano, Francés, Portugués (Brasil), Alemán, Ruso, Japonés, Chino, Polaco, Checo, Árabe",
+        idiomaVoces: "Inglés, Francés, Alemán, Polaco",
+        anio: "2026",
+        tamano: "50.5 GB",
+        formato: "ISO",
+        genero: "RPG, Mundo Abierto, Acción, Fantasía",
+      },
+      links: {
+        download: "https://www.mediafire.com/file/tzly4xc4rl8moim/thew3-wildh298.torrent/file",
+        purchase: "https://store.steampowered.com/agecheck/app/292030/",
+      },
+      gallery: [
+        "assets/images/games/the-witcher-3-wild-hunt/complementaria-1.jpg",
+        "assets/images/games/the-witcher-3-wild-hunt/complementaria-2.jpg",
+        "assets/images/games/the-witcher-3-wild-hunt/complementaria-3.jpg",
+        "assets/images/games/the-witcher-3-wild-hunt/complementaria-4.jpg",
+      ],
+      dlc: ["Hearts of Stone", "Blood and Wine", "Artworks", "Map", "Soundtrack x3"],
+    },
+    {
+      id: "the-last-of-us-part-i",
+      title: "The Last of Us Part I",
+      category: "Acción",
+      genre: "Aventura y supervivencia",
+      os: ["Windows"],
+      year: 2023,
+      popular: 90,
+      rating: 9.4,
+      featured: true,
+      sub: "Aventura y supervivencia · 2023",
+      cover: "assets/images/games/the-last-of-us-part-i/portada.jpg",
+      description:
+        "Veinte años después del colapso de la civilización, The Last of Us Part I sigue a Joel, un superviviente endurecido por la pérdida, y Ellie, una adolescente que podría guardar la clave para cambiar el destino de la humanidad. En un mundo devastado por una infección, ambos deberán atravesar ciudades abandonadas, enfrentarse a infectados y sobrevivientes despiadados, y aprender a confiar el uno en el otro. Una aventura intensa donde sobrevivir es solo una parte de la historia.",
+      requirements: {
+        min: {
+          os: "Windows 10 (versión 1909 o posterior)",
+          cpu: "AMD Ryzen 5 1500X, Intel Core i7-4770K",
+          ram: "16 GB",
+          gpu: "AMD Radeon RX 470 4 GB / RX 6500 XT 4 GB, NVIDIA GeForce GTX 970 4 GB / GTX 1050 Ti 4 GB",
+          storage: "100 GB libres",
+        },
+        rec: {
+          os: "Windows 10 (versión 1909 o posterior)",
+          cpu: "AMD Ryzen 5 3600X, Intel Core i7-8700",
+          ram: "16 GB",
+          gpu: "AMD Radeon RX 5700 XT 8 GB / RX 6600 XT 8 GB, NVIDIA GeForce RTX 2070 SUPER 8 GB / RTX 3060 8 GB",
+          storage: "100 GB libres",
+        },
+      },
+      specs: {
+        plataforma: "PC",
+        idiomaTextos: "Español, Inglés, Francés, Italiano, Portugués, Portugués (Brasil), Alemán, Ruso, Japonés, Polaco, Chino, Checo",
+        idiomaVoces: "Español, Inglés, Francés, Portugués (Brasil), Alemán, Polaco",
+        anio: "2023",
+        tamano: "66.1 GB",
+        formato: "ISO",
+        genero: "Acción, Aventura, Supervivencia",
+      },
+      links: {
+        download: "https://www.mediafire.com/file/i9vg4mlpkzec4zm/thelofusparti-v1.0.5.064806.torrent/file",
+        purchase: "https://store.steampowered.com/agecheck/app/1888930/",
+      },
+      gallery: [
+        "assets/images/games/the-last-of-us-part-i/complementaria-1.webp",
+        "assets/images/games/the-last-of-us-part-i/complementaria-2.webp",
+        "assets/images/games/the-last-of-us-part-i/complementaria-3.jpg",
+        "assets/images/games/the-last-of-us-part-i/complementaria-4.jpg",
+        "assets/images/games/the-last-of-us-part-i/complementaria-5.jpg",
+      ],
+      dlc: ["Digital Deluxe Upgrade + Soundtrack mp3", "Pre-purchase Entitlements"],
+    },
+    {
+      id: "gears-of-war-e-day",
+      title: "Gears of War: E-Day — Premium Edition",
+      category: "Acción",
+      genre: "Shooter en tercera persona",
+      os: ["Windows"],
+      year: 2026,
+      popular: 88,
+      rating: 8.8,
+      featured: true,
+      sub: "Shooter en tercera persona · 2026",
+      cover: "assets/images/games/gears-of-war-e-day/portada.jpg",
+      description:
+        "Antes de convertirse en leyendas, Marcus Fenix y Dominic Santiago tuvieron que enfrentarse al día que cambió el destino de Sera. Gears of War: E-Day recrea el primer ataque de la Horda Locust, cuando una amenaza surgida de las profundidades sumerge al mundo en el caos. Viví los orígenes de una guerra brutal, marcada por la desesperación, la camaradería y la lucha por sobrevivir.",
+      requirements: {
+        min: {
+          os: "Windows 10 64-bit (22H, 19045.7291)",
+          cpu: "AMD Ryzen 5 2600X / Intel Core i7-6850K / i5-10400",
+          ram: "12 GB",
+          gpu: "GPU con soporte de Ray Tracing: NVIDIA GeForce RTX 5050 / RTX 2060 / AMD Radeon RX 6600 / RX 9060",
+          directx: "Versión 12",
+          storage: "115 GB libres",
+        },
+        rec: {
+          os: "Windows 11 64-bit (25H2 o superior)",
+          cpu: "AMD Ryzen 5 5600 / Intel Core i5-11600K",
+          ram: "16 GB",
+          gpu: "NVIDIA GeForce RTX 5060 / RTX 3060 Ti / AMD Radeon RX 6700 XT / RX 9060 XT",
+          directx: "Versión 12",
+          storage: "115 GB libres",
+        },
+      },
+      specs: {
+        plataforma: "PC",
+        idiomaTextos: "Español, Inglés, Francés, Portugués (Brasil), Portugués, Alemán, Ruso, Polaco, Checo, Árabe",
+        idiomaVoces: "Español, Inglés, Francés, Portugués (Brasil), Alemán",
+        anio: "2026",
+        tamano: "98.5 GB",
+        formato: "ISO",
+        genero: "Shooter en tercera persona, Acción",
+      },
+      links: {
+        download: "https://www.mediafire.com/file/o7rr8dyolv4jlzs/gofw-e-day-pe-5252.torrent/file",
+        purchase: "https://store.steampowered.com/agecheck/app/3010850/",
+      },
+      gallery: [
+        "assets/images/games/gears-of-war-e-day/complementaria-1.jpg",
+        "assets/images/games/gears-of-war-e-day/complementaria-2.jpg",
+        "assets/images/games/gears-of-war-e-day/complementaria-3.jpg",
+      ],
+      dlc: [
+        "Premium 1000 Iron",
+        "Prince Street Pizza",
+        "Liquid Death Bundle",
+        "Luke Preece Marcus Weapon Skin Set",
+        "Pre-Order",
+        "Emergence Customization Pack",
+        "Bravo Squad Signature Weapon Pack",
+      ],
+    },
+    {
+      id: "little-nightmares-iii",
+      title: "Little Nightmares III",
+      category: "Terror",
+      genre: "Aventura y puzles",
+      os: ["Windows"],
+      year: 2025,
+      popular: 85,
+      rating: 8.5,
+      featured: true,
+      sub: "Aventura y puzles · 2025",
+      cover: "assets/images/games/little-nightmares-iii/portada.jpg",
+      description:
+        "Little Nightmares III es una aventura de terror, plataformas y rompecabezas que sigue a Low y Alone, dos jóvenes que deben escapar de la Espiral, un mundo oscuro y surrealista habitado por criaturas aterradoras. Para sobrevivir, tendrán que cooperar, resolver acertijos y superar peligros en un viaje lleno de misterio y tensión.",
+      requirements: {
+        min: {
+          os: "Windows 11",
+          cpu: "Intel Core i5-6500 o AMD Ryzen 3 1200",
+          ram: "8 GB",
+          gpu: "NVIDIA GeForce GTX 1060 o AMD Radeon RX 580",
+          storage: "20 GB libres",
+        },
+        rec: {
+          os: "Windows 11",
+          cpu: "Intel Core i5-8400 o AMD Ryzen 5 1600",
+          ram: "12 GB",
+          gpu: "NVIDIA GeForce RTX 2080 8 GB o AMD RX 6800",
+          storage: "20 GB libres",
+        },
+      },
+      specs: {
+        plataforma: "PC",
+        idiomaTextos: "Español, Inglés, Francés, Italiano, Portugués (Brasil), Alemán, Ruso, Japonés, Polaco, Chino, Árabe",
+        anio: "2025",
+        tamano: "14.01 GB",
+        formato: "ISO",
+        genero: "Terror, Aventura, Puzles, Plataformas",
+      },
+      links: {
+        download: "https://www.mediafire.com/file/8tlvhxe74i5efpy/littlenightmares3433.torrent/file",
+        purchase: "https://store.steampowered.com/app/1392860/Little_Nightmares_III/",
+      },
+      gallery: [
+        "assets/images/games/little-nightmares-iii/complementaria-1.jpg",
+        "assets/images/games/little-nightmares-iii/complementaria-2.webp",
+        "assets/images/games/little-nightmares-iii/complementaria-3.jpg",
+        "assets/images/games/little-nightmares-iii/complementaria-4.jpg",
+      ],
+      dlc: [
+        "Secrets of The Spiral Expansion Pass",
+        "Klonoa Costumes Set",
+        "Nomes Costumes Set",
+        "Dark Six Costumes Set",
+        "Residents Costumes Pack",
+        "Ferryman Costumes Set",
+        "The Backstage",
+        "The Shores",
+      ],
+    },
     /* ── Juego real (cargado manualmente desde "Contenedor de juegos") ──
        Portada: assets/images/games/cyberpunk-2077/portada.jpg
        Galería: imágenes "Complementaria N" copiadas a assets. */

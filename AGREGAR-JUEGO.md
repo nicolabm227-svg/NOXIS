@@ -168,7 +168,7 @@ Dentro del array `games` (ver el objeto de `cyberpunk-2077` como modelo), agreg�
 node --check js/data.js
 
 # 2) Cache-busting: subí ?v=N en index.html (afecta a todos los CSS/JS)
-#    (buscar/reemplazar ?v=23 por ?v=24, etc.)
+#    (buscar/reemplazar ?v=32 por ?v=33, etc.)
 
 # 3) Probar en local (Live Server abierto o servidor estático)
 npx.cmd serve .

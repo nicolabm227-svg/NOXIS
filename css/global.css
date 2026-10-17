@@ -97,6 +97,90 @@ body::before {
   background-repeat: no-repeat;
 }
 
+/* ---------- Fondo dinámico: orbes flotantes ----------
+   Capa fija global (visible en Inicio y Explorar), por detrás de todo
+   el contenido. Los orbes los genera js/orbs.js: son idénticos entre sí
+   (mismo tamaño, color y brillo, con el acento de la página) y solo
+   cambian en posición y tempo. Solo se animan transform/opacity.
+   El parallax usa las variables CSS de .orbs__layer para no interferir
+   con la animación de cada orbe. */
+.orbs {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.orbs__layer {
+  position: absolute;
+  inset: 0;
+  will-change: transform;
+  transform: translate3d(var(--orbs-px, 0px), var(--orbs-py, 0px), 0);
+  transition: transform 0.5s var(--ease);
+}
+
+/* Orbe base: idéntico para todos. Punto pequeño con núcleo claro y
+   glow en el acento de la página. Sin filter: blur (el degradado ya
+   difumina el borde → costo prácticamente cero). */
+.orbs__orb {
+  position: absolute;
+  width: 7px;
+  height: 7px;
+  margin: -3.5px 0 0 -3.5px;
+  border-radius: 50%;
+  opacity: 0;
+  will-change: transform, opacity;
+  background: radial-gradient(
+    circle at 50% 45%,
+    #d4e3ff 0%,
+    rgba(110, 168, 255, 0.85) 48%,
+    transparent 74%
+  );
+  box-shadow: 0 0 10px 0 rgba(110, 168, 255, 0.55);
+  animation: orb-float var(--orb-dur, 44s) linear infinite;
+  animation-delay: var(--orb-delay, 0s);
+}
+
+@keyframes orb-float {
+  0% {
+    transform: translate3d(0, 20vh, 0);
+    opacity: 0;
+  }
+  15% {
+    opacity: 0.75;
+  }
+  50% {
+    transform: translate3d(var(--orb-sway, 4vw), -28vh, 0);
+  }
+  85% {
+    opacity: 0.75;
+  }
+  100% {
+    transform: translate3d(0, -82vh, 0);
+    opacity: 0;
+  }
+}
+
+/* Menos orbes en pantallas chicas (batería). */
+@media (max-width: 640px) {
+  .orbs__orb:nth-child(n + 25) {
+    display: none;
+  }
+}
+
+/* Movimiento reducido: orbes estáticos y sin parallax. */
+@media (prefers-reduced-motion: reduce) {
+  .orbs__layer {
+    transform: none;
+    transition: none;
+  }
+  .orbs__orb {
+    animation: none;
+    opacity: 0.75;
+  }
+}
+
 body.no-scroll {
   overflow: hidden;
 }

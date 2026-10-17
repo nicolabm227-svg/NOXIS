@@ -23,6 +23,10 @@
       this.renderSections();
       // Refleja el estado actual del buscador (p. ej. al volver a Inicio).
       this.applySearch(this.searchInput ? this.searchInput.value.trim() : "");
+      // Efecto de escritura del encabezado (se re-ejecuta al volver a Inicio).
+      if (global.NOXIS.Typewriter && typeof global.NOXIS.Typewriter.play === "function") {
+        global.NOXIS.Typewriter.play(document.getElementById("view-home"));
+      }
     },
 
     setupGrids() {

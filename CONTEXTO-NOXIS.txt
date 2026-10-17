@@ -1,0 +1,336 @@
+================================================================================
+ NOXIS — DOCUMENTO DE CONTEXTO Y TRASPASO
+ Archivo: CONTEXTO-NOXIS.txt
+ Propósito: poder retomar el proyecto desde CUALQUIER punto con todo el contexto
+ necesario: qué es, cómo está hecho, sus funciones, su historial de cambios,
+ las decisiones de conversación y los pendientes.
+ Última actualización: 2026-10-17
+================================================================================
+
+
+--------------------------------------------------------------------------------
+1. QUÉ ES NOXIS
+--------------------------------------------------------------------------------
+NOXIS es un CATÁLOGO DE JUEGOS para PC, estático (HTML + CSS + JavaScript puro,
+sin build, sin framework, sin base de datos). Muestra los juegos en una Home con
+carriles ("Destacados", "Nuevos", "Más populares"), una vista "Explorar" con
+filtros y búsqueda, y una "ventana de juego" tipo overlay con descripción,
+requisitos, galería, DLC y enlaces de descarga/compra.
+
+- Todo el contenido sale de un único archivo de datos: js/data.js (objeto
+  global NOXIS.Data). No hay backend de contenido; solo hay un Worker de
+  Cloudflare para analítica/ranking de popularidad (opcional, con fallback).
+- El sitio se publica en Cloudflare (Workers), conectado por git: al hacer push
+  a la rama main, Cloudflare redespliega automáticamente (~1-2 min).
+
+Sitio en vivo:
+  https://noxis-hub-app.nicolabarranco2.workers.dev
+Repositorio:
+  https://github.com/nicolabm227-svg/NOXIS  (rama main)
+Worker de ranking (aparte, se despliega a mano):
+  https://noxis-rank.nicolabarranco2.workers.dev  (Cloudflare Worker + KV)
+
+
+--------------------------------------------------------------------------------
+2. STACK Y ESTRUCTURA DE ARCHIVOS
+--------------------------------------------------------------------------------
+- HTML: index.html (una sola página; contiene las vistas y los <script>/<link>).
+- CSS (5): css/global.css (tokens/base + fondo de orbes), css/components.css
+  (header/loader/tarjetas), css/home.css (Home + estilos del efecto de escritura),
+  css/explore.css, css/game.css.
+- JS (8, en este orden en index.html):
+    1) analytics.js  -> NOXIS.Analytics  (eventos anónimos al Worker)
+    2) data.js       -> NOXIS.Data       (fuente de datos + facets + búsqueda)
+    3) app.js        -> NOXIS.App        (núcleo: loader, router, navegación, buscador)
+    4) home.js       -> NOXIS.RouterHooks (render de la Home)
+    5) explore.js    -> NOXIS.RouterHooks (filtros/orden/paginación de Explorar)
+    6) game.js       -> NOXIS.Game       (ventana overlay del juego)
+    7) orbs.js       (autónomo, SIN namespace: genera el fondo de orbes + parallax)
+    8) typewriter.js -> NOXIS.Typewriter (efecto de escritura de encabezados)
+- Worker del ranking: worker/index.js + worker/wrangler.toml (KV NOXIS_EVENTS).
+- Assets: assets/images/ (logo, favicon, apple-touch-icon, portadas y galerías de
+  juegos en assets/images/games/<id>/).
+- Documentación: README.md, ARCHITECTURE.md, DESIGN_SYSTEM.md, DEVELOPMENT.md,
+  DEPLOY.md, PROJECT_STATUS.md, AI_CONTEXT.md, CHANGELOG.md, AGREGAR-JUEGO.md,
+  CONTRIBUTING.md y este CONTEXTO-NOXIS.txt.
+- Material crudo (gitignored, NO se publica): "Contenedor de juegos/<Nombre>/"
+  con Portada, Complementaria N, informacion.txt y .torrent.
+
+
+--------------------------------------------------------------------------------
+3. ARQUITECTURA Y FUNCIONES (APIs PÚBLICAS)
+--------------------------------------------------------------------------------
+Patrón: cada módulo se registra en window.NOXIS. Las vistas leen datos SOLO a
+través de NOXIS.Data (si algún día se cambia a Firebase, se sustituye el interior
+sin tocar las vistas).
+
+NOXIS.Data (js/data.js):
+  - init()                 Carga popularidad desde el Worker (solo en producción;
+                           en local se omite). Reordena con fallback estático.
+  - getAllGames()          Array completo de juegos.
+  - getSectionGames(key)   Juegos de una sección (featured|new|popular).
+  - getSections()          Carriles de la Home SIN repetir juegos; adapta el
+                           tamaño por sección (máx. 8) y omite las vacías.
+  - searchGames(query)     Búsqueda por título/categoría/género/subtítulo.
+  - getFacets()            Facetas para filtros: categories, genres, os, years.
+  - getTools()             Herramientas del bloque lateral (5).
+  - filterGames({...})     Filtra/ordena por category, genre, os, year, sort.
+
+NOXIS.App (js/app.js):
+  - init()                 Arranca loader, router, navegación y buscador global.
+  - openGame(id)           Abre la ventana de un juego por id.
+  - navigate(route)        Cambia de vista ("home" | "explore").
+  - NOXIS.RouterHooks      Lo definen home.js y explore.js para inicializar cada
+                           vista cuando el router entra en ella.
+
+NOXIS.Game (js/game.js):
+  - open(id)               Renderiza y abre el overlay del juego.
+  - close()                Cierra (también con Escape, backdrop o punto rojo).
+  - render(game)           HTML del contenido (tabs, galería, requisitos, DLC...).
+
+NOXIS.Analytics (js/analytics.js):
+  - endpoint               URL del Worker.
+  - track(type, data)      Envía evento anónimo (open/download/purchase) con
+                           sendBeacon; inactivo en local (file:/localhost).
+
+NOXIS.Typewriter (js/typewriter.js):
+  - play(root)             Escribe letra a letra los encabezados de la vista
+                           indicada (root = elemento de la vista). Scope-aware
+                           (cada vista tiene sus propios grupos). Se omite con
+                           prefers-reduced-motion.
+
+orbs.js: autónomo. Genera 40 orbes e implementa el parallax de la capa. Sin API.
+
+
+--------------------------------------------------------------------------------
+4. MODELO DE DATOS (SCHEMA DE UN JUEGO)
+--------------------------------------------------------------------------------
+Cada elemento del array `games` de js/data.js:
+
+  {
+    id, title, category, genre, os: ["Windows"], year,
+    popular (0..100, fallback de orden), rating (★ X.X / 10),
+    featured (bool -> aparece en "Destacados"),
+    sub ("<género> · <año>", subtítulo de la tarjeta),
+    cover ("assets/images/games/<id>/portada.jpg"),
+    description,                          // párrafo de la descripción
+    requirements: { min: {...}, rec: {...} },  // os, cpu, ram, gpu, vram, storage, ...(opcional)
+    specs: { plataforma, idiomaTextos, idiomaVoces, anio, tamano, formato, genero },
+    links: { download, purchase },        // abren en pestaña nueva
+    gallery: [".../complementaria-1.jpg", ...],
+    dlc: ["Nombre", ...]                  // OPCIONAL
+  }
+
+- specs.tamano alimenta el "chip de tamaño" de la tarjeta.
+- Todo bloque es opcional: la ventana degrada con elegancia (botones deshabilitados,
+  pestañas vacías, etc.). Si un juego no tiene DLC, se omite el campo `dlc`.
+- Filtros de Explorar se construyen desde getFacets(): category, genre, os, year.
+- Orden: `popular` (fallback) / `year` / `rating`.
+
+CATÁLOGO ACTUAL (11 juegos, en el ORDEN del array):
+  1) grand-theft-auto-v                 Grand Theft Auto V                    Acción     / Aventura de mundo abierto   2015  45 GB
+  2) the-witcher-3-wild-hunt            The Witcher 3: Wild Hunt — Remastered RPG        / RPG de mundo abierto         2026  50.5 GB   DLC 5
+  3) the-last-of-us-part-i              The Last of Us Part I                 Acción     / Aventura y supervivencia    2023  66.1 GB   DLC 2
+  4) gears-of-war-e-day                 Gears of War: E-Day — Premium Edition Acción     / Shooter en tercera persona  2026  98.5 GB   DLC 7
+  5) little-nightmares-iii              Little Nightmares III                 Terror     / Aventura y puzles           2025  14.01 GB  DLC 8
+  6) cyberpunk-2077                     Cyberpunk 2077                        Acción     / RPG de mundo abierto        2020  97.0 GB   DLC 1
+  7) god-of-war                         God of War                            Acción     / Aventura y mitología        2022  28.5 GB   —
+  8) red-dead-redemption-2              Red Dead Redemption 2                 Acción     / Aventura de mundo abierto   2019  103 GB    DLC 1
+  9) command-and-conquer-red-alert-3    Command & Conquer: Red Alert 3        Estrategia / Estrategia en tiempo real 2008  20 GB     DLC 1
+ 10) rise-of-nations-extended-edition   Rise of Nations: Extended Edition     Estrategia / Estrategia en tiempo real 2014  1.20 GB   DLC 1
+ 11) diablo-ii-resurrected              Diablo II: Resurrected — Infernal Ed. Acción     / RPG de acción               2021  31.5 GB   DLC 1
+
+NOTA DE ORDEN: los 5 juegos nuevos se colocaron PRIMERO en el array para que
+ocupen "Destacados" (que toma los primeros `featured`). Con 11 juegos, la Home
+reparte hasta 4 por sección y evita repetir, así que algunos juegos pueden no
+aparecer en la Home pero SÍ están en Explorar (los 11). Destacados actual:
+GTA V, The Witcher 3, The Last of Us Part I, Gears of War: E-Day.
+
+
+--------------------------------------------------------------------------------
+5. SISTEMA DE DISEÑO (RESUMEN)
+--------------------------------------------------------------------------------
+Ver DESIGN_SYSTEM.md para el detalle. Claves:
+- Estética oscura/tecnológica. Tokens: --bg #05060a, --accent #3b82f6,
+  --accent-soft #6ea8ff, --violet-soft #a78bfa, --text #f5f7fc; --grad-hero.
+- Tipografías: Sora + Inter (Google Fonts, display=swap).
+- Componentes: header (logo assets/images/logo.webp), loader, tarjetas
+  (.game-card con chip de tamaño), ventana de juego (.game-window), pills,
+  acordeón de filtros, paginación, "volver arriba".
+
+FONDO DE ORBES (js/orbs.js + css/global.css):
+- 40 orbes IDÉNTICOS (mismo tamaño/color/glow; solo cambian posición y tempo),
+  deliberadamente discretos. Tamaño 7x7px, opacidad 0.75, glow 10px/0.55,
+  núcleo #d4e3ff. Ascienden lento con leve vaivén (orb-float).
+- Deterministas (LCG semilla fija 20261016), fixed z-index:-1, pointer-events:none.
+- Parallax sutil (±16px) solo en punteros finos y sin reduced-motion.
+- Móvil: se ocultan los últimos 16 (quedan 24). reduced-motion: estáticos.
+
+EFECTO DE ESCRITURA / TYPEWRITER (js/typewriter.js + css/home.css):
+- Los encabezados de Inicio (eyebrow/título/subtítulo) y de Explorar se escriben
+  letra a letra con cadencia orgánica y micro-pausas tras comas/puntos; cursor
+  fino (1.5px, degradado + glow) que parpadea y se desvanece al terminar.
+- SIN destello: las letras se envuelven y ocultan apenas carga el módulo (nunca
+  se ve el texto completo antes de animar). En la primera carga, arranca
+  sincronizado con el fundido del loader; en Explorar, al entrar a la vista.
+- El título de Inicio conserva el degradado (--grad-hero) repartido por letra
+  (medido tras document.fonts.ready). Texto animado aria-hidden + aria-label.
+- Scope-aware: play(root). Se re-ejecuta al volver a cada vista. reduced-motion:
+  texto plano sin spans.
+
+
+--------------------------------------------------------------------------------
+6. CÓMO AGREGAR UN JUEGO (RESUMEN)
+--------------------------------------------------------------------------------
+Detalle completo en AGREGAR-JUEGO.md. Pasos:
+  1) Elegir id (minúsculas, guiones).
+  2) Copiar/renombrar assets a assets/images/games/<id>/:
+     Portada.* -> portada.jpg ; Complementaria N.* / imagen N.* -> complementaria-N.<ext>.
+     OJO: la extensión debe coincidir con el contenido real (mirar magic bytes).
+  3) Agregar el objeto del juego a `games` en js/data.js (ver schema §4).
+  4) Volcar DLC en `dlc` si la ficha los menciona (no inventar).
+  5) node --check js/data.js.
+  6) Subir ?v=N en index.html (cache-busting).
+  7) Probar en Home, Explorar y ficha (incl. bloque DLC). Verificar 0 errores/404.
+  8) git add ... && git commit && git push origin main (Cloudflare publica solo).
+
+REVISIÓN RECOMENDADA (harness local): sirve un servidor estático y abre Edge
+headless por CDP. Scripts de ejemplo en
+C:\Users\nbmn8\AppData\Local\Temp\opencode\ (noxis_server.js, e2e_new5.js,
+e2e_home11.js, verify_data.js). n
+
+
+--------------------------------------------------------------------------------
+7. VERSIONADO Y CACHE-BUSTING
+--------------------------------------------------------------------------------
+- index.html referencia CSS/JS con ?v=N (16 ocurrencias). VALOR ACTUAL: ?v=32.
+- Al tocar CUALQUIER .css o .js, subir el número (buscar/reemplazar ?v=32 por
+  ?v=33, etc.) para forzar recarga en navegadores con caché vieja.
+
+
+--------------------------------------------------------------------------------
+8. DEPLOY Y AUTENTICACIÓN DE GIT
+--------------------------------------------------------------------------------
+- Deploy del sitio = git push a main -> Cloudflare Workers (git-connected) publica
+  en ~1-2 min. NO es GitHub Pages.
+- El Worker del ranking (worker/) se despliega aparte, a mano, con wrangler.
+- GOTCHA DE AUTH: `git push origin main` puede fallar 403 porque el Git Credential
+  Manager usa una cuenta equivocada (nicolabarranco27-a11y). WORKAROUND:
+    git push "https://nicolabm227-svg@github.com/nicolabm227-svg/NOXIS.git" main
+- Identidad local esperada: nicolabm227-svg / nicolabarranco2@gmail.com.
+- Antes de commitear: revisar git status / git diff y NO subir secretos.
+
+
+--------------------------------------------------------------------------------
+9. SEO / GOOGLE SEARCH CONSOLE
+--------------------------------------------------------------------------------
+- Propiedad (Prefijo de URL): https://noxis-hub-app.nicolabarranco2.workers.dev/
+- Meta de verificación google-site-verification en index.html.
+- sitemap.xml en la raíz con la URL pública.
+- Cloudflare static assets: html_handling "auto-trailing-slash". Comportamiento:
+  /archivo -> 200 ; /archivo.html -> 307 -> /archivo ; /index.html -> 307 -> / .
+  Sin SPA fallback (404 en rutas inexistentes).
+- PENDIENTE: GSC mostró "No se ha podido leer el sitemap" aunque responde 200
+  application/xml válido (sin BOM ni X-Robots-Tag). Probable causa transitoria +
+  caché. Reintentar indexación (Inspección de URL -> Solicitar indexación).
+
+
+--------------------------------------------------------------------------------
+10. ENTORNO DE DESARROLLO (Windows)
+--------------------------------------------------------------------------------
+- Shell: PowerShell 5.1. Sin `rg`; usar Select-String. Sin `gh` CLI.
+- Servidor local de prueba: node noxis_server.js <ROOT> <PORT>
+  (usado por los scripts e2e con Edge headless por CDP).
+- Edge: "C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe".
+- Verificación de sintaxis: node --check <archivo.js> (no hay linter/test runner).
+- El modelo NO puede "ver" imágenes: validar por DOM (dimensiones, img.naturalWidth).
+
+
+--------------------------------------------------------------------------------
+11. HISTORIAL DE CAMBIOS (CRONOLÓGICO)
+--------------------------------------------------------------------------------
+Commits previos en main (más nuevo primero):
+  08d12e4  Agrega soporte de DLC en la ficha del juego
+  589ef03  Agrega verificacion de Google Search Console y sitemap
+  98fa924  Agrega Diablo II Resurrected - Infernal Edition al catalogo
+  9e6f2cf  Mejora accesibilidad y buscador, arregla tarjetas y documenta el flujo de juegos
+  72801a3  Reemplaza el icono de marca por un logo de imagen y actualiza la documentacion
+  7f3c28b  Agrega chip de tamano en las tarjetas y documenta despliegue en Cloudflare
+  d934b42  Agrega analitica de trafico y ranking por interacciones
+  8442c3c  Fix header responsive en movil y actualiza enlace de UltraISO
+
+Trabajo LOCAL pendiente de commit (esta sesión + sesión anterior):
+  A) Fondo de orbes (js/orbs.js, css/global.css) y efecto de escritura
+     (js/typewriter.js, css/home.css, js/home.js, js/explore.js).
+  B) 5 juegos nuevos cargados (assets + js/data.js).
+  C) Cache-busting ?v=31 -> ?v=32.
+  D) Actualización de toda la documentación (contraseña de cambios) y este .txt.
+
+Detalle de lo agregado en esta tanda:
+  - 5 juegos nuevos: Gears of War: E-Day — Premium Edition, Grand Theft Auto V,
+    Little Nightmares III, The Last of Us Part I, The Witcher 3: Wild Hunt —
+    Remastered. Assets en assets/images/games/<id>/ (portada + complementarias),
+    objetos en js/data.js (descripción, requisitos, ficha, enlaces, galería y DLC).
+  - Reorden del array: los 5 nuevos van primero para encabezar "Destacados".
+
+
+--------------------------------------------------------------------------------
+12. DECISIONES Y NOTAS DE CONVERSACIÓN
+--------------------------------------------------------------------------------
+- Regla de oro: las vistas NO se tocan al agregar juegos; todo se genera desde
+  NOXIS.Data.
+- Orbes: se probaron varias iteraciones hasta quedar "uniformes y discretos"
+  (40 idénticos, 7px). Se evitó `filter: blur` y variantes de tamaño.
+- Typewriter: se corrigió el destello inicial ocultando las letras al cargar el
+  módulo y sincronizando el arranque con el loader. Luego se generalizó a
+  Explorar (scope-aware) en vez de duplicar código.
+- Nombres de imágenes del contenedor varían (Portada/PORTADA, "imagen 1",
+  "complementaria1", "complementarai4" (typo), "imagen1 .webp" con espacio):
+  se normalizan SIEMPRE al copiar.
+- El informacion.txt de Gears of War: E-Day traía el enlace de Descargar
+  EQUIVOCADO (apuntaba al torrent de The Witcher 3). Corregido con el enlace
+  real provisto por el usuario.
+- Datos no presentes en las fichas (decisiones provisionales, ver §13): ratings,
+  año de Witcher 3 (2026 según su ficha), requisitos ausentes en GTA V, sufijos
+  de edición en los títulos.
+
+
+--------------------------------------------------------------------------------
+13. DATOS PROVISIONALES / PENDIENTES / GOTCHAS
+--------------------------------------------------------------------------------
+PROVISIONAL (revisar cuando haya datos reales):
+- `rating` de los 5 nuevos NO está en las fichas; se asignó a criterio:
+  GTA V 9.5, The Witcher 3 9.6, The Last of Us 9.4, Gears 8.8, Little Nightmares III 8.5.
+- GTA V: su informacion.txt no trae requisitos -> pestaña *Requisitos* vacía.
+  (Se puede completar con requisitos reales.)
+- Títulos con sufijo de edición: "Gears of War: E-Day — Premium Edition" y
+  "The Witcher 3: Wild Hunt — Remastered" (según el nombre de las carpetas).
+- Año de The Witcher 3 = 2026 (según su ficha; el juego original es 2015).
+
+PENDIENTE:
+- Indexación en Google Search Console (reintentar "Solicitar indexación").
+- Publicar (commit + push) el trabajo local descrito en §11.
+
+GOTCHAS:
+- Extensiones mal nombradas en el contenedor -> verificar magic bytes antes de
+  publicar (ver AGREGAR-JUEGO.md §2).
+- Si un juego no aparece en la Home, es por el tope de 4 por sección + dedupe;
+  usar Explorar para ver el catálogo completo.
+- Assets huérfanos: assets/images/cover-*.svg (30) ya no se referencian.
+- Worker antiguo `noxis.nicolabarranco2.workers.dev` existe pero NO se usa.
+
+
+--------------------------------------------------------------------------------
+14. CÓMO RETOMAR CONTEXTO (CHECKLIST RÁPIDO)
+--------------------------------------------------------------------------------
+1) Leer este archivo + PROJECT_STATUS.md (estado) + CHANGELOG.md (historial).
+2) git status / git log --oneline -10 para ver qué está commiteado.
+3) Si vas a tocar CSS/JS: recordar subir ?v=N (actual 32).
+4) Si vas a agregar juegos: seguir AGREGAR-JUEGO.md.
+5) Para publicar: git add ... ; git commit -m "..." ;
+   git push "https://nicolabm227-svg@github.com/nicolabm227-svg/NOXIS.git" main
+   (Cloudflare publica solo en ~1-2 min).
+
+================================================================================
+ FIN DEL DOCUMENTO
+================================================================================

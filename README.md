@@ -72,7 +72,9 @@ NOXIS/
 │   ├── app.js
 │   ├── home.js
 │   ├── explore.js
-│   └── game.js
+│   ├── game.js
+│   ├── orbs.js           # orbes del fondo + parallax
+│   └── typewriter.js     # escritura de encabezados
 ├── worker/                # backend del ranking (Cloudflare Worker)
 │   ├── index.js
 │   └── wrangler.toml

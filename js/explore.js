@@ -46,6 +46,11 @@
       this.state.query = gi ? gi.value.trim() : "";
       this.bindGlobalSearch();
       this.apply();
+
+      // Efecto de escritura de la cabecera (se re-ejecuta al volver).
+      if (global.NOXIS.Typewriter && typeof global.NOXIS.Typewriter.play === "function") {
+        global.NOXIS.Typewriter.play(document.getElementById("view-explore"));
+      }
     },
 
     /* Vincula (una sola vez) la barra de búsqueda global al catálogo. */

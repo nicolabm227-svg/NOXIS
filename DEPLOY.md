@@ -101,9 +101,9 @@ curl -X POST https://noxis-rank.nicolabarranco2.workers.dev/event ^
 
 ## 7. Cache-busting
 
-El sitio referencia CSS/JS con `?v=N` (hoy `v=23`) para forzar la recarga en navegadores que tengan versiones viejas en caché.
+El sitio referencia CSS/JS con `?v=N` (hoy `v=32`) para forzar la recarga en navegadores que tengan versiones viejas en caché.
 
-- **Cada vez que cambies un `.css` o `.js`, subí el número** en `index.html` (`?v=24`, `?v=25`, …).
+- **Cada vez que cambies un `.css` o `.js`, subí el número** en `index.html` (`?v=32`, `?v=33`, …).
 - Si solo cambia `js/data.js` (agregar juegos), igual conviene subir la versión.
 
 ## 8. Entorno (Windows)

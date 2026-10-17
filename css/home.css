@@ -85,6 +85,67 @@
   max-width: 52ch;
 }
 
+/* ---------- Efecto máquina de escribir (Inicio y Explorar) ---------- */
+/* Mientras se escribe, cada letra permanece invisible hasta que le
+   toca el turno (`is-on`). El contenedor `.tw-line` va oculto a
+   lectores de pantalla: el texto real se expone vía aria-label. */
+.tw-ch {
+  transition: opacity 0.24s var(--ease);
+}
+.tw-typing .tw-ch {
+  opacity: 0;
+}
+.tw-typing .tw-ch.is-on {
+  opacity: 1;
+}
+
+/* Cursor fino con brillo, al final de la letra en curso. */
+.tw-ch.is-caret {
+  position: relative;
+}
+.tw-ch.is-caret::after {
+  content: "";
+  position: absolute;
+  left: 100%;
+  top: 0.06em;
+  width: 1.5px;
+  height: 0.94em;
+  margin-left: 1px;
+  border-radius: 1px;
+  background: linear-gradient(180deg, var(--accent-soft), var(--accent));
+  box-shadow: 0 0 9px var(--accent-glow);
+  animation: tw-caret 1.05s ease-in-out infinite;
+}
+
+@keyframes tw-caret {
+  0%,
+  42% {
+    opacity: 1;
+  }
+  58%,
+  100% {
+    opacity: 0;
+  }
+}
+
+/* Al terminar: el cursor deja de parpadear y se desvanece. */
+.tw-complete .tw-ch.is-caret::after {
+  animation: none;
+  opacity: 0;
+  transition: opacity 0.32s var(--ease);
+}
+
+/* Sin animación: texto visible y sin cursor. */
+@media (prefers-reduced-motion: reduce) {
+  .tw-ch {
+    opacity: 1 !important;
+    transition: none;
+  }
+  .tw-ch.is-caret::after {
+    display: none;
+  }
+}
+
 /* ---------- Secciones / cabeceras ---------- */
 .carousel-section {
   position: relative;

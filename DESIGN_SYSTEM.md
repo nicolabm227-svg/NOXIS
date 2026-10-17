@@ -13,7 +13,7 @@ NOXIS usa una estética **oscura, tecnológica y premium**, inspirada en interfa
 - Glass / blur en header y ventana de juego.
 - Minimalismo; sin saturación visual.
 
-> **Nota**: esta sección describe la identidad **actual** (lo que el código implementa hoy). Las *ideas futuras* (fondo dinámico, etc.) no forman parte de la identidad actual.
+> **Nota**: esta sección describe la identidad **actual** (lo que el código implementa hoy). Las *ideas futuras* que aún no están en el código no forman parte de la identidad actual.
 
 ## Tokens (variables CSS) — `css/global.css`
 
@@ -104,6 +104,25 @@ Definidas en `:root`:
 - Portada 2:3, nombre con `--font-display`, pills de hechos (año, plataformas, rating).
 - Botones: `.btn-primary` (Descargar, acento azul) y `.btn-secondary` (Comprar, neutro).
 - Pestañas: *Información / Requisitos / Galería* con subrayado activo.
+
+## Escritura de encabezados (Inicio y Explorar) — `css/home.css` + `js/typewriter.js`
+
+- **Efecto máquina de escribir**: al entrar a Inicio (eyebrow, título, subtítulo) o a Explorar (cabecera), el texto se "escribe" letra a letra (con un cursor fino y brillante), dando entrada gradual al contenido.
+- **Sin destello previo**: `js/typewriter.js` envuelve cada letra y las deja ocultas (`opacity: 0`) apenas carga el módulo (prepara Inicio y Explorar), de modo que **nunca se ve el texto completo** antes de la animación. El ancho/altura quedan reservados (las letras ocupan su lugar), así no hay saltos de layout.
+- **Trabaja por scope**: cada llamada `NOXIS.Typewriter.play(vista)` reconstruye solo los encabezados de esa vista, así Inicio y Explorar no se pisan entre sí. `home.js` y `explore.js` la invocan en su `init`.
+- **Arranque sincronizado**: la escritura comienza exactamente cuando el loader inicial empieza a fundirse (`transitionstart`) en la primera carga; en las visitas siguientes (sin loader) arranca al entrar a la vista.
+- **Ritmo premium**: velocidad distinta por bloque, **cadencia orgánica** (leve variación por letra) y **micro-pausas tras comas y puntos**, como un mecanografiado real. Solo `opacity` (GPU).
+- **Degradado continuo**: el título de Inicio conserva el degradado de `--grad-hero` en la palabra `aventura`; el módulo reparte el mismo degradado entre las letras (fondo escalado al ancho del tramo + desplazado por letra) para que el color fluya sin cortes aunque cada letra sea un elemento. Se mide tras `document.fonts.ready` para no desalinearse al cargar la tipografía.
+- **Accesibilidad/rendimiento**: el texto animado va en un contenedor `aria-hidden` y se expone `aria-label` con el texto completo; con `prefers-reduced-motion` se omite por completo (texto plano, sin spans). Se re-ejecuta cada vez que se vuelve a una vista.
+
+## Fondo dinámico — orbes flotantes (`css/global.css` + `js/orbs.js`)
+
+Capa fija global (visible en Inicio y Explorar, por detrás de todo el contenido: `.orbs`, `z-index: -1`, `pointer-events: none`).
+
+- **40 orbes idénticos**: los genera `js/orbs.js` como `<span class="orbs__orb">`. Todos tienen **el mismo tamaño (7px), el mismo color y el mismo brillo** (núcleo claro tenue + glow azul del acento `--accent-soft`); solo cambian en posición y tempo. Sin distinciones de tamaño/opacidad entre ellos. Son **discretos** (opacidad 0.75, glow suave) para no robar la atención del contenido.
+- **Movimiento** (`@keyframes orb-float`): ascenso de ~100vh con vaivén horizontal suave y opacidad 0.75 en el tramo central; solo `transform`/`opacity` (GPU). Cada orbe con duración (34–60s) y `animation-delay` negativo distintos para que no sincronicen; aparecen/desaparecen con opacidad 0 (loop invisible).
+- **Parallax**: `js/orbs.js` mueve `.orbs__layer` (máx. ±16px) según el puntero, vía las variables CSS `--orbs-px` / `--orbs-py`; la suavidad la da la `transition` de la capa. Inactivo en punteros gruesos (táctil) y con `prefers-reduced-motion`.
+- **Accesibilidad/rendimiento**: la capa es `aria-hidden`; en `prefers-reduced-motion` los orbes quedan **estáticos**; en `max-width: 640px` se ocultan los últimos 16 (quedan 24).
 
 ## Reglas visuales que deben respetarse
 
