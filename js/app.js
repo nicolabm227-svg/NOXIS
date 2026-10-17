@@ -26,12 +26,19 @@
     init() {
       this.cacheDom();
       this.bindEvents();
+      this.setFooterYear();
       this.hideLoader();
       this.showRoute("home");
       // Carga asíncrona de la popularidad dinámica (no bloquea el render).
       if (global.NOXIS.Data && typeof global.NOXIS.Data.init === "function") {
         global.NOXIS.Data.init();
       }
+    },
+
+    /* Rellena el año del footer con el año actual (evita que quede desactualizado). */
+    setFooterYear() {
+      const el = $("#footer-year");
+      if (el) el.textContent = String(new Date().getFullYear());
     },
 
     cacheDom() {

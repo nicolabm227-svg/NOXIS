@@ -100,6 +100,12 @@ La Home tenía tres carriles (*Destacados*, *Nuevos*, *Más populares*) que se s
 
 Motivo: cada carril tiene un rol distinto (popularidad vs. novedad) sin duplicar juegos, y la Home muestra el catálogo completo sin una sección "fantasma" de un solo ítem.
 
+## 20. Derechos reservados: licencia propia y aviso en el sitio
+
+Se reservan los derechos sobre **la página y su estructura** (código, diseño, arquitectura, disposición y marca) mediante un archivo `LICENSE` de "todos los derechos reservados", y se hace visible con un **footer** (`© NOXIS — Todos los derechos reservados`, año dinámico) presente en Inicio y Explorar. El contenido de los **juegos** (nombres, imágenes, marcas) queda **explícitamente excluido**: pertenece a sus desarrolladores/editoras y se usa solo con fines informativos, sin afiliación.
+
+Motivo: reservar la autoría y originalidad del sitio y su estructura sin reclamar derechos sobre material de terceros (los videojuegos).
+
 ## Decisiones NO tomadas (rechazadas por ahora)
 
 - **Framework JS** (React/Vue/Svelte): rechazado; se mantiene vanilla.

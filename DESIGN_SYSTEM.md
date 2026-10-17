@@ -95,6 +95,7 @@ Definidas en `:root`:
 - **Header / nav**: sticky, con blur, contiene la marca (logo `assets/images/logo.webp` en un cuadro de 30×30 con esquinas redondeadas y `object-fit: cover`), enlaces (Inicio/Explorar), buscador y slot de cuenta (deshabilitado).
 - **Tarjeta de juego** (`.game-card`): portada 2:3 con `object-fit: cover`, degradado inferior, meta (uppercase, acento), título y subtítulo. Hover: elevación + zoom leve + borde azul. Aparición progresiva por `IntersectionObserver`.
 - **Backdrop** (`#app-backdrop`): capa de transición entre vistas.
+- **Footer legal** (`.site-footer`): cierre de página con borde superior (`--line`), texto en `--text-dim`/`--text-faint`, copyright (`© NOXIS — Todos los derechos reservados`, año dinámico) y aviso de contenido de terceros. Presente en Inicio y Explorar.
 
 ## La ventana del juego — `css/game.css`
 

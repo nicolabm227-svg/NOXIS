@@ -1,0 +1,71 @@
+NOXIS — Licencia de uso
+Todos los derechos reservados (All Rights Reserved)
+Copyright (c) 2026 NOXIS. Todos los derechos reservados.
+
+--------------------------------------------------------------------------
+1. ALCANCE DE ESTA LICENCIA
+--------------------------------------------------------------------------
+
+Este repositorio y el sitio web NOXIS (en adelante, "el Sitio"), incluyendo de
+forma no taxativa:
+
+  - el código fuente (HTML, CSS y JavaScript) y los scripts del front;
+  - el Worker de Cloudflare y su lógica;
+  - la arquitectura, la estructura y la organización del proyecto;
+  - el diseño visual, el sistema de diseño, el layout y los componentes;
+  - la disposición, curación y forma de presentación de los contenidos;
+  - los textos, descripciones y elementos originales propios;
+  - el logotipo, el nombre comercial y la identidad de marca;
+
+son obra original y propiedad exclusiva de NOXIS y de sus autores, y están
+protegidos por las leyes nacionales e internacionales de propiedad intelectual
+y derechos de autor aplicables.
+
+--------------------------------------------------------------------------
+2. QUÉ NO ESTÁ PERMITIDO
+--------------------------------------------------------------------------
+
+Sin autorización previa y por escrito del titular, queda prohibido:
+
+  - reproducir, copiar, distribuir o comunicar públicamente el Sitio o
+    cualquiera de sus partes;
+  - reutilizar, clonar o imitar su estructura, arquitectura, diseño o
+    sistema de design (incluida la disposición de la interfaz);
+  - modificar, transformar, adaptar o crear obras derivadas;
+  - realizar ingeniería inversa, descompilar o extraer su código con fines
+    de reutilización;
+  - explotar el Sitio total o parcialmente con fines comerciales.
+
+Todos los derechos que no se conceden expresamente quedan reservados.
+
+--------------------------------------------------------------------------
+3. EXCEPCIÓN — CONTENIDO DE TERCEROS (JUEGOS)
+--------------------------------------------------------------------------
+
+NOXIS es un catálogo de carácter informativo. Los nombres, títulos, logotipos,
+imágenes, portadas, capturas, marcas registradas y cualquier otro material de
+los videojuegos mostrados pertenecen a sus respectivos desarrolladores,
+editoras y titulares de derechos.
+
+NOXIS NO reclama ni posee derecho alguno sobre dichos materiales y los emplea
+únicamente con fines de identificación e información. NOXIS no está afiliado,
+patrocinado ni respaldado por ninguna de dichas compañías.
+
+La presente licencia NO concede ningún derecho sobre el contenido de terceros.
+
+--------------------------------------------------------------------------
+4. EXENCIÓN DE GARANTÍAS
+--------------------------------------------------------------------------
+
+El Sitio se proporciona "TAL CUAL" y "SEGÚN DISPONIBILIDAD", sin garantías de
+ningún tipo, expresas o implícitas. El titular no se responsabiliza por el uso
+que terceros hagan de la información publicada ni por el contenido de los
+sitios y enlaces externos de descarga o compra a los que el Sitio pueda
+referir.
+
+--------------------------------------------------------------------------
+5. CONTACTO
+--------------------------------------------------------------------------
+
+Para solicitar autorización o resolver dudas sobre el uso del Sitio:
+  Repositorio: https://github.com/nicolabm227-svg/NOXIS

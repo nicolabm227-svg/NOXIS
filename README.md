@@ -59,6 +59,7 @@ Para el detalle completo, ver [PROJECT_STATUS.md](PROJECT_STATUS.md).
 ```
 NOXIS/
 ├── index.html
+├── LICENSE                # derechos reservados (sitio, código y estructura)
 ├── sitemap.xml            # sitemap para Google Search Console
 ├── css/
 │   ├── global.css
@@ -88,3 +89,11 @@ NOXIS/
 
 - **Local**: abrí `index.html` con un servidor local (Live Server o `npx.cmd serve .`). Ver [DEVELOPMENT.md](DEVELOPMENT.md).
 - **Producción**: `git push origin main` publica el sitio solo; el Worker se despliega a mano. Ver [DEPLOY.md](DEPLOY.md).
+
+---
+
+## Licencia y derechos
+
+El **sitio, su código fuente, su diseño y su estructura** son obra original y propiedad de NOXIS, con **todos los derechos reservados**. No se autoriza su reproducción, reutilización ni el clonado de su estructura o diseño sin permiso previo por escrito. El texto legal completo está en [LICENSE](LICENSE).
+
+Los **nombres, imágenes, portadas y marcas de los juegos** mostrados pertenecen a sus respectivos desarrolladores y editoras; NOXIS solo los muestra con fines de identificación e información y no está afiliado ni patrocinado por ellos.

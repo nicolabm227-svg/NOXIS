@@ -569,3 +569,33 @@
   .game-card__title { font-size: 0.9rem; }
   .game-card__size { top: 8px; right: 8px; font-size: 0.64rem; padding: 2px 7px; }
 }
+
+/* ===== Footer / aviso legal ===== */
+.site-footer {
+  margin-top: 56px;
+  padding: 28px 0 40px;
+  border-top: 1px solid var(--line);
+  color: var(--text-faint);
+  font-size: 0.8rem;
+}
+
+.site-footer__inner {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.site-footer__copy {
+  color: var(--text-dim);
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
+.site-footer__legal {
+  max-width: 72ch;
+  line-height: 1.55;
+}
+
+@media (max-width: 480px) {
+  .site-footer { margin-top: 40px; padding: 24px 0 32px; font-size: 0.74rem; }
+}

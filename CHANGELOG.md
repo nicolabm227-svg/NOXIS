@@ -14,8 +14,11 @@ Registro del estado conocido y la evolución del proyecto. No se dispone de fech
 - **Ventana del juego (overlay)**: marco tipo ventana de escritorio, tres puntos de control, portada 2:3, descripción real, pestañas (Información/Requisitos/Galería), botones Descargar y Comprar que abren enlaces externos.
 - **Analítica + ranking**: `NOXIS.Analytics` envía eventos al Worker; `NOXIS.Data.init()` reordena por popularidad real (con fallback estático). Tráfico medido con Cloudflare Web Analytics.
 - **Datos**: `NOXIS.Data` con 11 juegos reales (descripción, requisitos, ficha técnica, enlaces y galería) y 5 herramientas.
+- **Legal**: footer global con copyright ("© NOXIS — Todos los derechos reservados", año dinámico) y aviso de terceros; archivo [`LICENSE`](LICENSE) que reserva los derechos sobre el sitio, el código y la estructura (excluyendo los juegos, propiedad de sus titulares).
 
 ### Cambios recientes
+
+- **Derechos reservados (copyright)**: se agrega el archivo [`LICENSE`](LICENSE) (todos los derechos reservados sobre el sitio, el código, el diseño y **la estructura**; con excepción explícita para los **juegos**, cuyos nombres/imágenes/marcas pertenecen a sus titulares) y un **footer** que aparece en Inicio y Explorar con `© NOXIS — Todos los derechos reservados` (año dinámico vía `app.js`) y un aviso de terceros. `?v=` subido a `34`.
 
 - **Home: se elimina "Más populares" y "Destacados" se ordena por popularidad**: *Más populares* era redundante con *Destacados* (todos los juegos tienen `featured: true` y el dedupe dejaba ese carril con una sola tarjeta). Ahora la Home tiene **dos secciones**: *Destacados* (todos los `featured`, ordenados por popularidad real —descargas/interacciones— con fallback al campo estático `popular`) y *Nuevos* (por año). Se quitó el corte a 8 dentro de cada `select`, así el reparto sin repetidos muestra los **11** juegos (6 + 5). `?v=` subido a `33`.
 

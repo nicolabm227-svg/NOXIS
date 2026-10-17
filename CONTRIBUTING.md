@@ -86,6 +86,11 @@ No toques los módulos de vista: facetas, secciones y ficha se generan a partir 
 - **Futura validación de URLs**: antes de insertar una URL dinámica en un `href`, validar el esquema/protocolo para evitar `javascript:` u otros esquemas peligrosos.
 - **Firebase (futuro)**: si se migra, gestionar reglas de seguridad en Firestore/Storage, y no exponer claves/secretos en el front-end.
 
+## Licencia y derechos
+
+- El **sitio, su código, diseño y estructura** están reservados (**todos los derechos reservados**, ver [`LICENSE`](LICENSE)). No copies ni reutilices la estructura/diseño sin permiso.
+- Los **juegos** y sus materiales (nombres, portadas, marcas) son de sus respectivos titulares; NOXIS no reclama derechos sobre ellos. Al agregar contenido, no elimines el aviso de terceros del **footer**.
+
 ## Checklist antes de enviar un cambio
 
 - [ ] `node --check` en los JS modificados.

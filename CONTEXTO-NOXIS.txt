@@ -22,6 +22,10 @@ requisitos, galería, DLC y enlaces de descarga/compra.
   Cloudflare para analítica/ranking de popularidad (opcional, con fallback).
 - El sitio se publica en Cloudflare (Workers), conectado por git: al hacer push
   a la rama main, Cloudflare redespliega automáticamente (~1-2 min).
+- DERECHOS: el sitio, su código, diseño y ESTRUCTURA están reservados (LICENSE,
+  "todos los derechos reservados"). El footer muestra el copyright y un aviso de
+  terceros. Los JUEGOS (nombres/imágenes/marcas) NO son nuestros: pertenecen a
+  sus titulares y se muestran solo a modo informativo.
 
 Sitio en vivo:
   https://noxis-hub-app.nicolabarranco2.workers.dev
@@ -205,9 +209,9 @@ e2e_home11.js, verify_data.js). n
 --------------------------------------------------------------------------------
 7. VERSIONADO Y CACHE-BUSTING
 --------------------------------------------------------------------------------
-- index.html referencia CSS/JS con ?v=N (16 ocurrencias). VALOR ACTUAL: ?v=33.
-- Al tocar CUALQUIER .css o .js, subir el número (buscar/reemplazar ?v=33 por
-  ?v=34, etc.) para forzar recarga en navegadores con caché vieja.
+- index.html referencia CSS/JS con ?v=N (16 ocurrencias). VALOR ACTUAL: ?v=34.
+- Al tocar CUALQUIER .css o .js, subir el número (buscar/reemplazar ?v=34 por
+  ?v=35, etc.) para forzar recarga en navegadores con caché vieja.
 
 
 --------------------------------------------------------------------------------
@@ -252,6 +256,7 @@ e2e_home11.js, verify_data.js). n
 11. HISTORIAL DE CAMBIOS (CRONOLÓGICO)
 --------------------------------------------------------------------------------
 Commits previos en main (más nuevo primero):
+  1d2500b  Docs: actualiza CONTEXTO-NOXIS (historial de commits y nota de orden)
   513ffa7  Home: quita "Más populares" (redundante) y ordena "Destacados" por popularidad
   6099a43  Agrega 5 juegos nuevos (GTA V, Witcher 3, TLOU I, Gears E-Day, LN III) + orbes y typewriter + docs (43 archivos)
   08d12e4  Agrega soporte de DLC en la ficha del juego
@@ -276,6 +281,14 @@ descargas/interacciones del Worker, con fallback estático) y se quitó el corte
 en los `select`, para que la Home reparta los 11 juegos (6 + 5). Toca: js/data.js,
 index.html (?v=32 -> ?v=33) y docs (CHANGELOG, PROJECT_STATUS, ARCHITECTURE,
 README, DEVELOPMENT, DEPLOY, DECISIONS #19, AGREGAR-JUEGO y este .txt).
+
+Tanda "derechos reservados" (esta sesión, commit actual = ver git log -1): se
+agrega LICENSE (todos los derechos reservados sobre el sitio, código, diseño y
+ESTRUCTURA; excepción explícita para los juegos) y un FOOTER global (en Inicio y
+Explorar) con "© NOXIS — Todos los derechos reservados" (año dinámico) + aviso de
+terceros. Toca: LICENSE (nuevo), index.html (?v=33 -> ?v=34, footer), css/
+components.css (.site-footer), js/app.js (setFooterYear) y docs (CHANGELOG,
+PROJECT_STATUS, README, DECISIONS #20 y este .txt).
 
 Detalle de lo agregado en esta tanda:
   - 5 juegos nuevos: Gears of War: E-Day — Premium Edition, Grand Theft Auto V,
@@ -302,6 +315,9 @@ Detalle de lo agregado en esta tanda:
   con fallback al `popular` estático) y se quitó el `slice(0, 8)` de los `select`
   para que `getSections()` reparta los 11 juegos (6 + 5). El buscador sigue
   reordenando "Destacados".
+- Derechos: se reservan los derechos del sitio/estructura (LICENSE) y se avisa en
+  el footer. Decisión clave: NO reclamar propiedad sobre los juegos; el LICENSE
+  deja explícita la excepción de contenido de terceros.
 - Nombres de imágenes del contenedor varían (Portada/PORTADA, "imagen 1",
   "complementaria1", "complementarai4" (typo), "imagen1 .webp" con espacio):
   se normalizan SIEMPRE al copiar.

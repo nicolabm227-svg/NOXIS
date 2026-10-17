@@ -61,6 +61,10 @@ Fotografía del proyecto en el momento de redactar este documento. El código es
 - **Popularidad dinámica**: `NOXIS.Data.init()` lee `/popular` y reordena *Destacados* y el orden "populares" de Explorar; fallback al campo estático `popular`.
 - **Analítica de tráfico**: Cloudflare Web Analytics (visitas/páginas/referrers) en el dashboard.
 
+### Legal
+- **Footer** global (Inicio y Explorar) con `© NOXIS — Todos los derechos reservados` (año dinámico vía `app.js`) y aviso de contenido de terceros.
+- **[`LICENSE`](LICENSE)**: todos los derechos reservados sobre el sitio, el código, el diseño y la **estructura**; excepción explícita para los **juegos** (nombres/imágenes/marcas de sus titulares).
+
 ### Despliegue
 - Sitio: GitHub → Cloudflare Workers (**deploy automático al push a `main`**).
 - Worker: deploy manual con `wrangler` (ver [DEPLOY.md](DEPLOY.md)).
